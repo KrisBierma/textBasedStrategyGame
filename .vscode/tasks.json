@@ -1,0 +1,29 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "echo",
+      "type": "shell",
+      "command": "g++",
+      "args" :[
+        "-g",
+        "space.cpp",
+        "displayRoundMenu.cpp",
+        // "spider.cpp",
+        // "cat.cpp",
+        // "elephant.cpp",
+        "spaceList.cpp",
+        // "meerkats.cpp",
+        "inputValidation.cpp",
+        "menu.cpp",
+        "${file}",
+        "-o",
+        "${fileDirname}\\${fileBasenameNoExtension}.exe"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    }
+  ]
+}

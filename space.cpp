@@ -33,8 +33,9 @@ Space::~Space() {
 //   down = downIn;
 // };
 
-void Space::setData(string spaceNameIn, bool hasItem, string itemNameIn, int itemActionNumIn, Space *northIn, Space *eastIn, Space *southIn, Space *westIn) {
+void Space::setData(string spaceNameIn, bool hasItemIn, string itemNameIn, int itemActionNumIn, Space *northIn, Space *eastIn, Space *southIn, Space *westIn) {
   spaceName = spaceNameIn;
+  hasItem = hasItemIn;
   itemName = itemNameIn;
   itemActionNum = itemActionNumIn;
   north = northIn;

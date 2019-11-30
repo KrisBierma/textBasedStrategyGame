@@ -17,10 +17,10 @@ class Space {
     // bool hasBackpack = false;
     string itemName;
     string itemNameForPrinting;
-    bool hasItem;
-    bool itemTaken = false;
     string itemDescription;
     int itemActionNum;
+    bool hasItem;
+    bool itemTaken = false;
 
     string afterActionDescription;
 

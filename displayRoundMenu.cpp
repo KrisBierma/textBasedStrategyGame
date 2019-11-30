@@ -35,12 +35,13 @@ int* displayRoundMenu(bool hasBackpack, Space *currentSpace, vector<string> &bac
     spaceMenuChoices.push_back(choice);
     currentMenuNum++;
   }
-cout <<"1."<< hasBackpack <<endl;
+// cout <<"1."<< hasBackpack <<endl;
+// cout << currentSpace->getHasItem()<<endl<<!currentSpace->isItemTaken()<<endl;
   // add item to menu if there is one and it's still in it's original location
   // and/or add item that have been dropped????????
   int numForItem;
   if (currentSpace->getHasItem() && !currentSpace->isItemTaken()) {
-    cout << "in add menu item\n";
+    // cout << "in add menu item\n";
     ss.str("");   // clear streamstring
     ss << currentMenuNum;
     choice = ss.str();
@@ -53,28 +54,30 @@ cout <<"1."<< hasBackpack <<endl;
     spaceMenuChoices.push_back(choice);
     numForItem = currentMenuNum;
     currentMenuNum++;
-
+// cout <<"before item descrip\n";
     cout << currentSpace->getItemDescription() << endl << endl;
   }
 
-  // add seeBackpack and printBackpack to menu choices
-  int printBackpack = false;
-  int dropItem = false;
+  // add seeBackpack and openBackpack to menu choices
+  bool openBackpack = false, dropItem = false;
+  int openBackpackNum, dropItemNum;
   if (hasBackpack) {
     ss.str("");   // clear streamstring
     ss << currentMenuNum;
     choice = ss.str() + ": Open backpack";
     spaceMenuChoices.push_back(choice);
+    openBackpackNum = currentMenuNum;
     currentMenuNum++;
-    printBackpack = true;
+    // openBackpack = true;
   }
   if (hasBackpack && backpack.empty()) {
     ss.str("");   // clear streamstring
     ss << currentMenuNum;
     choice = ss.str() + ": Drop item";
     spaceMenuChoices.push_back(choice);
+    dropItemNum = currentMenuNum;
     currentMenuNum++;
-    dropItem = true;
+    // dropItem = true;
   }
 
 
@@ -100,8 +103,20 @@ cout <<"1."<< hasBackpack <<endl;
   Menu roundMenu(spaceMenuChoices, spaceMenuNums);
 
   // array to pass back userChoice, currentMenuNum and the item's menu number
+  cout << endl << endl;
   int userChoice = roundMenu.getUserChoice();
-  int infoArray[5] = {userChoice, currentMenuNum, numForItem, printBackpack, dropItem};
+  cout << endl << endl;
+
+  // if user choice = open backpack num
+  if (userChoice == openBackpackNum) {
+    openBackpack = true;
+  }
+  // if user choice = drop item num
+  else if (userChoice == dropItemNum) {
+    dropItem = true;
+  }
+
+  int infoArray[5] = {userChoice, currentMenuNum, numForItem, openBackpack, dropItem};
   int *arrayP = infoArray;
 
   return arrayP;

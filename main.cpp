@@ -18,6 +18,7 @@
 #include <sstream> //for to_string
 #include "menu.hpp"
 #include "space.hpp"
+#include "spaceDescrip.hpp"
 #include "displayRoundMenu.hpp"
 #include "inputValidation.hpp"
 // using std::to_string; 
@@ -65,8 +66,8 @@ int main() {
 
     // set space descriptions
     house.setDescriptions("the house", "your backpack", "You're in front of the house. No need to go back inside; you're sure the key and treasure are somewhere on your uncle's 40 acre estate.", "Your backpack is sitting on a bench.", "You grab your backpack. It might come in handy.");
-    trees.setDescriptions("the copse of trees", "some flowers", "It's cool in the small patch of trees.", "There are some pretty flowers along the path. They smell heavenly.", "");
-    zooEntry.setDescriptions("the zoo entrance", "the sounds", "There are trees overhead. The wind rustles through them. You think you hear something else.", "It's the sound of parrots squawking.", "");
+    trees.setDescriptions("the copse of trees", "some flowers", "It's cool in the small patch of trees.", "There are some pretty flowers along the path. They smell heavenly.", "Mmm. What will you do with these?!");
+    zooEntry.setDescriptions("the zoo entrance", "the sounds", "There are trees overhead. The wind rustles through them.", "You think you hear something else.", "It's the sound of parrots squawking.");
 
     // add to vector list
     vector<Space*> spaceVector = {houseP, treesP, zooEntryP};
@@ -86,98 +87,104 @@ int main() {
 
     // loop for each turn
     while (!quit && currentRoundNum <= numRounds) {
+      bool endRound = false;
       // display numRounds
       cout << endl << "******* Round " << currentRoundNum << "/" << numRounds << " *******" << endl;
 
       // description for current location
       cout << currentSpace->getSpaceDescription() << endl << endl;
 
-      // show roundMenu and get data from it and user's choice
-      int *infoArray = displayRoundMenu(hasBackpack, currentSpace, backpack);
-      int userChoiceForThisSpace = infoArray[0];
-      int currentMenuNum = infoArray[1];
-      int numForItem = infoArray[2];
-      bool printBackpack = infoArray[3];
-      bool dropItem = infoArray[4];
+      // loop menu and possible actions until user move's location
+      while (!endRound) {
+        // show roundMenu and get data from it and user's choice
+        int *infoArray = displayRoundMenu(hasBackpack, currentSpace, backpack);
+        int userChoiceForThisSpace = infoArray[0];
+        int currentMenuNum = infoArray[1];
+        int numForItem = infoArray[2];
+        bool printBackpack = infoArray[3];
+        bool dropItem = infoArray[4];
 
-      // cout <<"user choice: "<<userChoiceForThisSpace<<endl;
-      // cout <<"numForItem: "<<numForItem<<endl;
+        // cout <<"user choice: "<<userChoiceForThisSpace<<endl;
+        // cout <<"numForItem: "<<numForItem<<endl;
 
-      int numPossibleMoves = currentSpace->getSpacePointers().size();
+        int numPossibleMoves = currentSpace->getSpacePointers().size();
 
-      // act according to user's choice
-      if (userChoiceForThisSpace == currentMenuNum) {
-        quit = true;
-      }
-      else {
-        // move user
-        if (userChoiceForThisSpace >= 1 && userChoiceForThisSpace <= numPossibleMoves) {
+        // act according to user's choice
+        if (userChoiceForThisSpace == currentMenuNum) {
+          quit = true;
+        }
+        else {
+          // move user
+          if (userChoiceForThisSpace >= 1 && userChoiceForThisSpace <= numPossibleMoves) {
 
-          // find the user's choice in the currentSpace's spacePointers (from class)
-          vector<Space*> tempVec = currentSpace->getSpacePointers();
-          string tempName = tempVec[userChoiceForThisSpace-1]->getSpaceName();
+            // find the user's choice in the currentSpace's spacePointers (from class)
+            vector<Space*> tempVec = currentSpace->getSpacePointers();
+            string tempName = tempVec[userChoiceForThisSpace-1]->getSpaceName();
 
-          // search through spaceVector (from main) to find the space that matches the user's move choice
-          for (auto i : spaceVector) {
-            if (i->getSpaceName() == tempName) {
-              cout << "I found it!\n";
-              // cout << i << endl;
-              currentSpace = i;
+            // search through spaceVector (from main) to find the space that matches the user's move choice
+            for (auto i : spaceVector) {
+              if (i->getSpaceName() == tempName) {
+                cout << "I found it!\n";
+                // cout << i << endl;
+                currentSpace = i;
+              }
+            }
+            currentRoundNum++;
+            endRound = true;
+          }
+
+          // display backpack
+          else if (printBackpack) {
+            if (!backpack.empty()) {
+              cout << "Your backpack is empty.\n";
+            }
+            else {
+              for (auto i : backpack) {
+                cout << i << " ";
+              }
+              cout << endl;              
             }
           }
-cout << hasBackpack<<endl;
-          currentRoundNum++;
-        }
 
-        // display backpack
-        else if (printBackpack) {
-          if (!backpack.empty()) {
-            cout << "Your backpack is empty.\n";
+          // drop item
+          else if (dropItem) {
+            cout << "in dropItem\n";
+
           }
-          else {
-            for (auto i : backpack) {
-              cout << i << " ";
+
+          // do action on item
+          else if (userChoiceForThisSpace == numForItem) {
+            int actionNum = currentSpace->getItemActionNum();
+            // cout << "in doAction\n";
+
+            // get backpack
+            if (currentSpace->getItemName() == "backpack") {
+              hasBackpack = true;
             }
-            cout << endl;              
-          }
-        }
+            // put item in backpack
+            if (hasBackpack && actionNum == 1) {
+              // mark as taken in object
+              currentSpace->setItemTaken(true);
 
-        // drop item
-        else if (dropItem) {
-          cout << "in dropItem\n";
-
-        }
-
-        // do action on item
-        else if (userChoiceForThisSpace == numForItem) {
-          int actionNum = currentSpace->getItemActionNum();
-          // cout << "in doAction\n";
-
-          // get backpack
-          if (currentSpace->getItemName() == "backpack") {
-            hasBackpack = true;
+              // add to backpack container
+              backpack.push_back(currentSpace->getItemName());
+            }
+            else if (actionNum == 2 || actionNum == 3) {
+              currentSpace->setItemTaken(true);
+            }
+            else if (actionNum >= 4 || actionNum <= 7) {
+              // do nothing
+            }
+            else if (actionNum == 8) {
+              cout << "how to deal with this??\n";
+            }
+            // display info after taking action
+            cout << currentSpace->getItemDescriptionAfter();
           }
-          // put item in backpack
-          if (hasBackpack && actionNum == 1) {
-            // mark as taken in object
-            currentSpace->setItemTaken(true);
-
-            // add to backpack container
-            backpack.push_back(currentSpace->getItemName());
-          }
-          else if (actionNum == 2 || actionNum == 3) {
-            currentSpace->setItemTaken(true);
-          }
-          else if (actionNum >= 4 || actionNum <= 7) {
-            // do nothing
-          }
-          else if (actionNum == 8) {
-            cout << "how to deal with this??\n";
-          }
-          // display info after taking action
-          cout << currentSpace->getItemDescriptionAfter() << endl;
-        }
+        }        
       }
+
+
     }
   }
 

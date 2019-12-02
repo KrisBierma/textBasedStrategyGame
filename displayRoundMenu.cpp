@@ -3,17 +3,22 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
+#include <map>
 #include "displayRoundMenu.hpp"
 #include "menu.hpp"
 #include "space.hpp"
+using std::map;
 using std::cin;
 using std::cout;
 using std::endl;
+using std::pair;
 using std::vector;
 using std::string;
 using std::stringstream;
 
-int* displayRoundMenu(bool hasBackpack, Space *currentSpace, vector<string> &backpack) {
+string toString(int numIn);
+
+string displayRoundMenu(int *infoArray, bool hasBackpack, Space *currentSpace, vector<string> &backpack, map<string, string> &droppedItemsMap, int numPossibleMoves) {
 
   // create menu
   vector<string> spaceMenuChoices;
@@ -23,81 +28,78 @@ int* displayRoundMenu(bool hasBackpack, Space *currentSpace, vector<string> &bac
   // get possible spaces to move to
   vector<Space*> tempHolder = currentSpace->getSpacePointers();
   
-  stringstream ss;
   for (unsigned j = 0; j < tempHolder.size(); j++) {
-    ss.str("");   // clear streamstring
-    ss << j+1;
-    choice = "";
-    choice += ss.str();
-    choice += ": Go to ";
-    // choice += to_string(j) + ": Go to ";
+    choice = "" + toString(j+1) + ": Go to ";
     choice += tempHolder[j]->getSpaceNameForPrinting();
     spaceMenuChoices.push_back(choice);
     currentMenuNum++;
   }
-// cout <<"1."<< hasBackpack <<endl;
-// cout << currentSpace->getHasItem()<<endl<<!currentSpace->isItemTaken()<<endl;
-  // add item to menu if there is one and it's still in it's original location
-  // and/or add item that have been dropped????????
+
   int numForItem;
-  if (currentSpace->getHasItem() && !currentSpace->isItemTaken()) {
-    // cout << "in add menu item\n";
-    ss.str("");   // clear streamstring
-    ss << currentMenuNum;
-    choice = ss.str();
-    // choice = to_string(currentMenuNum);
-    choice += ": ";
-    choice += currentSpace->getVerbForAction();
-    choice += " ";
+  // int nameOfDroppedItemsHere;
+  map<int,string> droppedItemsMenuNums;  
+  // add backpack to menu if the currentSpace is house
+  // add item to menu if there is one and it's still in it's original location and the user has a backpack
+  // add items that have been dropped in currentSpace
+  if ((currentSpace->getHasItem() && !currentSpace->isItemTaken() && hasBackpack && !currentSpace->hasSpaceDependency())  || (currentSpace->getSpaceName() == "house" && !currentSpace->isItemTaken())) {
+    choice = toString(currentMenuNum) + ": ";
+    choice += currentSpace->getVerbForAction() + " ";
     choice += currentSpace->getItemNameForPrinting();
-    // cout <<choice<<endl;
+
     spaceMenuChoices.push_back(choice);
     numForItem = currentMenuNum;
     currentMenuNum++;
-// cout <<"before item descrip\n";
-    cout << currentSpace->getItemDescription() << endl << endl;
+
+    cout << currentSpace->getItemDescription();
+  }
+  else {
+    // if no item available
+    numForItem = -1;
+  }
+  if (hasBackpack && !droppedItemsMap.empty()) {
+    // go through droppedItems map and find the ones dropped in current space, add them to the menu
+    map<string, string>::iterator itr;
+    for (itr = droppedItemsMap.begin(); itr != droppedItemsMap.end(); ++itr) {
+      if (itr->second == currentSpace->getSpaceName()) {
+        // add to menu
+        choice = toString(currentMenuNum) + ": Take the ";
+        choice += itr->first;
+        spaceMenuChoices.push_back(choice);
+        droppedItemsMenuNums.insert(pair<int,string>(currentMenuNum, itr->first));
+        currentMenuNum++;
+      }
+    }    
   }
 
-  // add seeBackpack and openBackpack to menu choices
-  bool openBackpack = false, dropItem = false;
-  int openBackpackNum, dropItemNum;
+  // add openBackpack, dropItem, and useItem to menu choices
+  bool openBackpack = false, dropItem = false, useItem = false, pickUpDroppedItem = false;
+  int openBackpackNum = -1, dropItemNum = -1, useItemNum = -1;
+  string nameOfDroppedItem;
   if (hasBackpack) {
-    ss.str("");   // clear streamstring
-    ss << currentMenuNum;
-    choice = ss.str() + ": Open backpack";
+    choice = toString(currentMenuNum) + ": Open backpack";
     spaceMenuChoices.push_back(choice);
     openBackpackNum = currentMenuNum;
     currentMenuNum++;
-    // openBackpack = true;
   }
-  if (hasBackpack && backpack.empty()) {
-    ss.str("");   // clear streamstring
-    ss << currentMenuNum;
-    choice = ss.str() + ": Drop item";
+  if (hasBackpack && !backpack.empty()) {
+    choice = toString(currentMenuNum) + ": Drop item";
     spaceMenuChoices.push_back(choice);
     dropItemNum = currentMenuNum;
     currentMenuNum++;
-    // dropItem = true;
+    choice = toString(currentMenuNum) + ": Use item";
+    spaceMenuChoices.push_back(choice);
+    useItemNum = currentMenuNum;
+    currentMenuNum++;
   }
 
-
   // add quit to menu choices
-  ss.str("");   // clear streamstring
-  ss << currentMenuNum;
-  choice = ss.str() + ": I quit";
-  // choice = to_string(currentMenuNum) + ": I give up. Quit the game.";
+  choice = toString(currentMenuNum) + ": I quit";
   spaceMenuChoices.push_back(choice);
-
 
   vector<int> spaceMenuNums;
   for (unsigned k = 1; k < spaceMenuChoices.size()+1; k++) {
     spaceMenuNums.push_back(k);
   }
-  // cout << "numChoices: " <<spaceMenuNums.size()<<endl;
-  // for (unsigned k = 0; k < spaceMenuChoices.size(); k++) {
-  //   cout << spaceMenuNums[k] << " ";
-  // }
-  // cout <<endl;
 
   // instantiate roundMenu
   Menu roundMenu(spaceMenuChoices, spaceMenuNums);
@@ -105,19 +107,48 @@ int* displayRoundMenu(bool hasBackpack, Space *currentSpace, vector<string> &bac
   // array to pass back userChoice, currentMenuNum and the item's menu number
   cout << endl << endl;
   int userChoice = roundMenu.getUserChoice();
-  cout << endl << endl;
+  cout << endl;
 
-  // if user choice = open backpack num
-  if (userChoice == openBackpackNum) {
+  // cout <<"userChoice: "<<userChoice<<endl;
+
+  if (userChoice >= 1 && userChoice <= numPossibleMoves) {
+  
+  }
+  else if (userChoice == openBackpackNum) {
+    // cout <<"openback=tru\n";
     openBackpack = true;
   }
-  // if user choice = drop item num
   else if (userChoice == dropItemNum) {
     dropItem = true;
   }
+  else if (userChoice == useItemNum) {
+    useItem = true;
+  }
+  else if (!droppedItemsMenuNums.empty()) {
+    // cout <<"in !dropped..\n";
+    // map<int, string>::iterator itr;
+    nameOfDroppedItem = droppedItemsMenuNums.find(userChoice)->second;
+    pickUpDroppedItem = true;
+    // cout << "....."<<nameOfDroppedItem<<endl;
+  }
+  else {
+    nameOfDroppedItem = "none";
+  }
 
-  int infoArray[5] = {userChoice, currentMenuNum, numForItem, openBackpack, dropItem};
-  int *arrayP = infoArray;
+  infoArray[0] = userChoice;
+  infoArray[1] = currentMenuNum;
+  infoArray[2] = numForItem;
+  infoArray[3] = openBackpack;
+  infoArray[4] = dropItem;
+  infoArray[5] = useItem;
+  infoArray[6] = pickUpDroppedItem;
+// cout <<"end of displayRoundMenu\n";
+  return nameOfDroppedItem;
+};
 
-  return arrayP;
+string toString(int numIn) {
+  stringstream ss;
+  ss.str("");   // clear streamstring
+  ss << numIn;
+  return ss.str();
 };

@@ -7,56 +7,37 @@ using std::vector;
 using std::cout;// de
 using std::endl;// de
 
-// Space::Space(string spaceNameIn, string itemNameIn, Space *northIn, Space *eastIn, Space *southIn, Space *westIn, Space *upIn, Space *downIn) {
-//   spaceName = spaceNameIn;
-//   itemName = itemNameIn;
-//   north = northIn;
-//   east = eastIn;
-//   south = southIn;
-//   west = westIn;
-//   up = upIn;
-//   down = downIn;
-// };
-
 Space::~Space() {
-
+  // delete pointerHolder vector
+  vector<Space*>().swap(pointerHolder);
 };
 
-// void Space::setData(string spaceNameIn, string itemNameIn, Space *northIn, Space *eastIn, Space *southIn, Space *westIn, Space *upIn, Space *downIn) {
+// void Space::setData(string spaceNameIn, bool hasItemIn, string itemNameIn, int itemActionNumIn, Space *northIn, Space *eastIn, Space *southIn, Space *westIn) {
 //   spaceName = spaceNameIn;
+//   hasItem = hasItemIn;
 //   itemName = itemNameIn;
+//   itemActionNum = itemActionNumIn;
 //   north = northIn;
 //   east = eastIn;
 //   south = southIn;
 //   west = westIn;
-//   up = upIn;
-//   down = downIn;
+
+//   if (north != nullptr) {
+//     pointerHolder.push_back(north);
+//   }
+//   if (east != nullptr) {
+//     pointerHolder.push_back(east);
+//   }
+//   if (south != nullptr) {
+//     pointerHolder.push_back(south);
+//   }
+//   if (west != nullptr) {
+//     pointerHolder.push_back(west);
+//   }
+
 // };
 
-void Space::setData(string spaceNameIn, bool hasItemIn, string itemNameIn, int itemActionNumIn, Space *northIn, Space *eastIn, Space *southIn, Space *westIn) {
-  spaceName = spaceNameIn;
-  hasItem = hasItemIn;
-  itemName = itemNameIn;
-  itemActionNum = itemActionNumIn;
-  north = northIn;
-  east = eastIn;
-  south = southIn;
-  west = westIn;
 
-  if (north != nullptr) {
-    pointerHolder.push_back(north);
-  }
-  if (east != nullptr) {
-    pointerHolder.push_back(east);
-  }
-  if (south != nullptr) {
-    pointerHolder.push_back(south);
-  }
-  if (west != nullptr) {
-    pointerHolder.push_back(west);
-  }
-
-};
 
 // gettters
 string Space::getSpaceName() {
@@ -123,14 +104,24 @@ string Space::getItemDescription() {
   return itemDescription;
 };
 
-string Space::getItemDescriptionAfter() {
-  return afterActionDescription;
+string Space::getDescriptionAfterDependency() {
+  return descriptionAfterDependency;
 };
 
 int Space::getItemActionNum() {
   return itemActionNum;
 }
 
+string Space::getSpaceDependency() {
+  return spaceDependency;
+}
+
+bool Space::hasSpaceDependency() {
+  if (spaceDependency == "") {
+    return false;
+  }
+  return true;
+}
 
 bool Space::isItemTaken() {
   return itemTaken; // a getter
@@ -141,15 +132,16 @@ void Space::setItemTaken(bool yesOrNo) {
   itemTaken = yesOrNo;
 }
 
-void Space::setDescriptions(string printSpaceNameIn, string printItemNameIn, string spaceDescrptionIn, string itemDescriptionIn, string afterActionDescriptionIn) {
+void Space::setDescriptions(string printSpaceNameIn, string printItemNameIn, string spaceDescrptionIn, string itemDescriptionIn, string spaceDepend, string descripAfterDepend) {
   spaceNameForPrinting = printSpaceNameIn;
   itemNameForPrinting = printItemNameIn;
   spaceDescrption = spaceDescrptionIn;
   itemDescription = itemDescriptionIn;
-  afterActionDescription = afterActionDescriptionIn;
+  spaceDependency = spaceDepend;
+  descriptionAfterDependency = descripAfterDepend;
 };
 
 
-void Space::printSpaces() {
+// string Space::getSpaceType() {
 
-}
+// }

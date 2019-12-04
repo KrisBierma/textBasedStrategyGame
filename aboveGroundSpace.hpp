@@ -11,7 +11,7 @@ class AboveGroundSpace : public Space {
   private:
     Space *down;
   public:
-    AboveGroundSpace();
+    AboveGroundSpace(string spaceNameIn, string printSpaceNameIn, string spaceDescrptionIn);
     // ~AboveGroundSpace();
     void setPointers(Space *northIn, Space *eastIn, Space *southIn, Space *westIn, Space *downIn);
 

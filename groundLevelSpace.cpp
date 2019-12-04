@@ -1,7 +1,8 @@
 
 #include "groundLevelSpace.hpp"
+#include "space.hpp"
 
-GndLvlSpace::GndLvlSpace() {};
+GndLvlSpace::GndLvlSpace(string spaceNameIn, string printSpaceNameIn, string spaceDescrptionIn) : Space(spaceNameIn, printSpaceNameIn, spaceDescrptionIn) {};
 
 // GndLvlSpace::~GndLvlSpace() {};
 

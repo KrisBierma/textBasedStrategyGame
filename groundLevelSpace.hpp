@@ -8,7 +8,7 @@
 
 class GndLvlSpace : public Space {
   public:
-    GndLvlSpace();
+    GndLvlSpace(string spaceNameIn, string printSpaceNameIn, string spaceDescrptionIn);
     // ~GndLvlSpace();
     void setPointers(Space *northIn, Space *eastIn, Space *southIn, Space *westIn);
 

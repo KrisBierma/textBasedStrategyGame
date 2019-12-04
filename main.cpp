@@ -17,10 +17,13 @@
 #include <map>
 #include <vector>
 #include <sstream>
-#include <tuple>
-// #include <algorithm>
+// #include <tuple>
 #include "menu.hpp"
 #include "space.hpp"
+#include "game.hpp"
+#include "item.hpp"
+#include "helpers.hpp"
+#include "itemToggle.hpp"
 #include "spaceDescrip.hpp"
 #include "displayRoundMenu.hpp"
 #include "inputValidation.hpp"
@@ -35,12 +38,11 @@ using std::cout;
 using std::endl;
 using std::vector;
 using std::string;
-using std::tuple;
+// using std::tuple;
 // using std::remove_if;
 using std::stringstream;
 
 int chooseItemFromBackpack(vector<string> &backpack);
-string makeCaptial(string wordIn);
 
 int main() {
   // showStartMenu
@@ -52,210 +54,179 @@ int main() {
   // playGame  
   bool quit = false;
   while (userChoice != 2 && !quit) {
-    int numRounds = 36;
-    int currentRoundNum = 1;
+    Game game;
 
-    // set up backpack vector container with random-access iterator
+    // set up backpack vector container
     vector<string> backpack;
-    bool hasBackpack = false;
-
-    // container to hold completed dependency actions (dependency items are checked in the backpack)
-    // vector<string> dependencyVec;
-    // dependency actions
-    bool lightSwitchedOn = false;
-    bool powerButtonPushed = false;
 
     // map to hold dropped items: key is item, value is space
     map<string, string> droppedItemsMap;
 
+    // instantiate items
+      // remove idk
+      Item *lightSwitchP = new ItemToggle(2, "lightSwitch", "the light switch", "There's a light switch on the wall.", "You flip the switch and can see a door on the other side of the room. It leads to the train!", "There's also a power button.");
+      Item *powerButtonP = new ItemToggle(3, "powerButton", "the big, green power button", "", "Choo choo! The train goes around the property, passing the courtyard, a copse of trees and ending at the house.  As it stops you hear a rustling in the passenger car.", "idk");
+      Item *crackersP = new Item(1, "crackers", "the crackers", "Someone left a small package of crackers in one of them.", "You take the crackers in case you get hungry later.", "You put a cracker up to the wire. The parrot flies over and grabs the cracker. A key falls through the wire and lands at your feet.");
+      Item *flashlightP = new ItemToggle(1, "flashlight", "the flashlight", "As you walk down the aisle you notice a flashlight in one of the pews.", "You grab it just in case.", "Good thing you found this flashlight.");
+      Item *doorP = new ItemToggle(4, "door", "a hidden door", "In the stone behind it, there's an outline of something like a door.", "You run your hand along the stone and something clicks. A door opens. It's dark inside.", "idk");
+      Item *pushPinP = new Item(1, "pushPin", "a push pin", "As you're nearing the end, the light glints off something on the floor.", "You pick up a push pin.", "idk");
+      Item *soundsP = new Item(5, "sounds", "the sounds", "You think you hear something else.", "It's the sound of parrots squawking.", "idk");
+      Item *keyP = new Item(1, "key", "a key", "The parrots look like a snack would be welcome.", "You take the key.", "idk");
+      Item *signP = new Item(6, "sign", "the sign", "There's a sign in front of them.", "Llamas are great pack animals, they're super smart and their fur is used to make all kinds of things. They're originally from South America.", "idk");
+      Item *backpackP = new Item(1, "backpack", "your backpack", "Your backpack is sitting on a bench.", "You grab your backpack. It might come in handy.", "idk");
+      Item *flowersP = new Item(1, "flowers", "the flowers", "There are some pretty flowers along the path. They smell heavenly.", "Mmm. Smells nice. I wonder what you will you do with them.", "idk");
+      Item *displayCaseP = new Item(7, "", "a large glass display case", "There's a glass display case.", "Inside are signed first editions of C. S. Lewis's Chronicles of Narnia.", "idk");
+      Item *paperP = new Item(1, "paper", "a piece of paper", "A piece of paper flutters to the floor.", "It has 912 written on it.", "The card says 912, which leads to the maps section.");
+      Item *windowP = new Item(7, "windowSeat", "a window seat", "There's a comfortable window seat.", "With the binoculars you see a tower. It looks like it's part of the library. How do you get up there?", "idk");
+      Item *mapP = new Item(1, "map", "a map", "For some reason there's a map lying loose on top of the books.", "You take the map.", "There's a frame that's empty.");
+      Item *binocularsP = new Item(1, "binoculars", "a pair of binoculars", "There are binoculars hanging on a peg.", "You never know when you'll need to see better.", "You sit down. Aww. From the window you see something interesting. If only you could get a closer look.");
+      // Item *keyHoleP = new Item();
+      Item *libDoorP = new ItemToggle(8, "door", "a locked door", "At the top is a locked door.", "You put the key in the lock and it clicks open.", "idk");
+      Item *treasureP = new Item(8, "box", "the treasure box", "There's a treasure box on a top in the middle.", "Inside the box is Uncle's first edition books with a note. \"These are yours now. They're worth a great deal. Do you keep them, knowing you possess a fortune in knowledge and money, or do you trade them in for their value?\"", "idk");
+    // libMapRoom->setItem(true, 8, "pushPin", "push pin", "Remembering the llamas, you somehow need to mark South America.", "You push the pin into the map and hear something click. A section of the wall slides away revealing a short hallway with a locked door at the end of it.");
+      // actionIn, nameIn, printNameIn, descripIn, descriptAfterIn, descripAfterDepIn
+
     // instantiate spaces
-      GndLvlSpace trainStation;
-      GndLvlSpace trainLocomotive;
-      GndLvlSpace trainPassengerCar;
-      GndLvlSpace chapelPews;
-      GndLvlSpace chapelFront;
-      StairsSpace chapelStairs;
-      UndergroundSpace chapelSecretPassW;
-      UndergroundSpace chapelSecretPassE;
-      StairsSpace zooStairs;
-      GndLvlSpace zooEntry;
-      GndLvlSpace zooParrots;
-      GndLvlSpace zooLlamas;
-      GndLvlSpace house;
-      GndLvlSpace courtyard;
-      GndLvlSpace trees;
-      GndLvlSpace libEntry;
-      GndLvlSpace libOffice;
-      StairsSpace libStairs;
-      GndLvlSpace libWindowSeat;
-      GndLvlSpace libStacks;
-      UndergroundSpace libBasement;
-      AboveGroundSpace libMapRoom;
-      StairsSpace libMapRmStairs;
-      AboveGroundSpace libSecretTower;
+      Space *trainStationP = new GndLvlSpace("trainStation", "the train station", "Your uncle built a train station to house his dad's memorabilia. They loved building model trains together, but what they've got outside it something on a much grander scale.");
+      Space *trainLocomotiveP = new GndLvlSpace("trainLoco", "a half scale locomotive", "The locomotive is big enough for you to sit in. There a lots of dials, switches and an accelerator.");
+      Space *trainPassengerCarP = new GndLvlSpace("trainPassCar", "the passenger car", "There are eight or ten seats.");
+      Space *chapelPewsP = new GndLvlSpace("chapelPews", "a replica of a Byzantine church", "The church is cool and quiet. There are pews and, further down, a dome and an ambo built into the wall.");
+      // chapelFront->setDescriptions("chapelFront", "the ambo", "The ambo is of dark wood and has steps leading up to it so the preacher can be seen from the furthest pew.");
+      Space *chapelFrontP = new GndLvlSpace("chapelFront", "the ambo", "The ambo is of dark wood and has steps leading up to it so the preacher can be seen from the furthest pew. In the stone behind it, there's an outline of something like a door. You run your hand along the stone and something clicks. A door opens. It's dark inside.");
+      Space *chapelStairsP = new StairsSpace("chapelStairs", "the secret stairs", "There are stairs going down.");
+      Space *chapelSecretPassWP = new UndergroundSpace("chapelSecretPassW", "the secret passageway", "There's a corner ahead.");
+      Space *chapelSecretPassEP = new UndergroundSpace("chapelSecretPassE", "the end of the passage", "The flashlight dimly lights the secret passage.");
+      Space *zooStairsP = new StairsSpace("zooStairs", "another set of stairs", "There stairs go up.");
+      Space *zooEntryP = new GndLvlSpace("zooEntry", "the zoo entrance", "There are trees overhead. The wind rustles through them.");
+      Space *zooParrotsP = new GndLvlSpace("zooParrots", "the parrot enclosure", "There's a tall wooden structure enclosed with wire. Several parrots are in the habitat. One of the parrots has something in its mouth.");
+      Space *zooLlamasP = new GndLvlSpace("zooLlama", "the llama enclosure", "A fenced in area houses several llamas.");
+      Space *houseP = new GndLvlSpace("house", "the house", "You're in front of the house. No need to go back inside; you're sure the key and treasure are somewhere on your uncle's 40 acre estate.");
+      Space *courtyardP = new GndLvlSpace("courtyard", "the courtyard", "There's a fountain in the middle and four pathways leading in all directions.");
+      Space *treesP = new GndLvlSpace("trees", "the copse of trees", "It's cool in the small patch of trees.");
+      Space *libEntryP = new GndLvlSpace("libEntry", "the library foyer","Your uncle was a great scholar and a voracious reader. He was also a collector of rare books and build his own library to house them.");
+      Space *libOfficeP = new GndLvlSpace("libOffice", "an office", "The library office looks like a busy place. There are filing cabinets, a desk and stacks of paper everywhere.");
+      Space *libStairsP = new StairsSpace("libStairs", "the library stairs", "The stairs are wide, wooden and might lead to anywhere.");
+      Space *libWindowSeatP = new GndLvlSpace("libWinSeat", "a window seat", "A comfortable niche is in the wall.");
+      Space *libStacksP = new GndLvlSpace("libStacks", "the libary stacks", "The library stacks are grand. Your uncle really loved to read. There are a lot of aisles to look down.");
+      Space *libBasementP = new UndergroundSpace("libBasementCloset", "a basement closet", "The closet is full of stuff.");
+      Space *libMapRoomP = new AboveGroundSpace("libMapRoom", "the library's map room", "The map room is incredible! There are old maps with faded ink, fragments of maps, and maps that are modern and colorful. Most are framed.");
+      Space *libMapRmStairsP = new StairsSpace("libMapRoomStairs", "secret stairs", "The stairs are narrow and steep, wooden steps that follow the square wall of the tower. They look old but are surprisingly clean.");
+      Space *libSecretTowerP = new AboveGroundSpace("libSecretRoom", "the secret tower room", "Inside is the secret tower room. It's small and brightly lit. How did you not know about this?!");
 
-    // set pointers to space objects for use in main.cpp
-      // Space *trainStationP = &trainStation;
-      // Space *trainLocomotiveP = &trainLocomotive;
-      // Space *trainPassengerCarP = &trainPassengerCar;
-      // Space *chapelPewsP = &chapelPews;
-      // Space *chapelFrontP = &chapelFront;
-      // Space *chapelStairsP = &chapelStairs;
-      // Space *chapelSecretPassWestP = &chapelSecretPassW;
-      // Space *chapelSecretPassEastP = &chapelSecretPassE;
-      // Space *zooStairsP = &zooStairs;
-      // Space *zooEntryP = &zooEntry;
-      // Space *zooParrotsP = &zooParrots;
-      // Space *zooLlamasP = &zooLlamas;
-      // Space *houseP = &house;
-      // Space *courtyardP = &courtyard;
-      // Space *treesP = &trees;
-      // Space *libEntryP = &libEntry;
-      // Space *libOfficeP = &libOffice;
-      // Space *libStairsP = &libStairs;
-      // Space *libWindowSeatP = &libWindowSeat;
-      // Space *libStacksP = &libStacks;
-      // Space *libBasementP = &libBasement;
-      // Space *libMapRoomP = &libMapRoom;
-      // Space *libMapRmStairsP = &libMapRmStairs;
-      // Space *libSecretTowerP = &libSecretTower;
+    // set space pointers
+      static_cast<GndLvlSpace*>(trainStationP)->setPointers(nullptr, courtyardP, trainLocomotiveP, nullptr);
+      static_cast<GndLvlSpace*>(trainLocomotiveP)->setPointers(trainStationP, houseP, trainPassengerCarP, nullptr);
+      static_cast<GndLvlSpace*>(trainPassengerCarP)->setPointers(trainLocomotiveP, nullptr, nullptr, nullptr);
+      static_cast<GndLvlSpace*>(chapelPewsP)->setPointers(nullptr, chapelFrontP, courtyardP, nullptr);
+      static_cast<GndLvlSpace*>(chapelFrontP)->setPointers(nullptr, chapelStairsP, nullptr, chapelPewsP);
+      static_cast<StairsSpace*>(chapelStairsP)->setPointers(nullptr, nullptr, nullptr, nullptr, chapelSecretPassWP, chapelFrontP);
+      static_cast<UndergroundSpace*>(chapelSecretPassWP)->setPointers(nullptr,chapelSecretPassEP, nullptr, nullptr, chapelStairsP); //goes up
+      static_cast<UndergroundSpace*>(chapelSecretPassEP)->setPointers(nullptr, nullptr, nullptr, chapelSecretPassWP, zooStairsP); // goes up
+      static_cast<StairsSpace*>(zooStairsP)->setPointers(nullptr, nullptr, nullptr, nullptr, zooEntryP, chapelSecretPassEP); // up and down
+      static_cast<GndLvlSpace*>(zooEntryP)->setPointers(zooParrotsP, nullptr, zooLlamasP, houseP);
+      static_cast<GndLvlSpace*>(zooParrotsP)->setPointers(nullptr, nullptr, zooEntryP, nullptr);
+      static_cast<GndLvlSpace*>(zooLlamasP)->setPointers(zooEntryP, nullptr, nullptr, nullptr);
+      static_cast<GndLvlSpace*>(houseP)->setPointers(nullptr, zooEntryP, nullptr, treesP);
+      static_cast<GndLvlSpace*>(courtyardP)->setPointers(chapelPewsP, treesP, libEntryP, trainStationP);
+      static_cast<GndLvlSpace*>(treesP)->setPointers(nullptr, houseP, nullptr, courtyardP);  
+      static_cast<GndLvlSpace*>(libEntryP)->setPointers(courtyardP, libOfficeP, libStacksP, nullptr);
+      static_cast<GndLvlSpace*>(libOfficeP)->setPointers(nullptr, libStairsP, libBasementP, libEntryP);
+      static_cast<StairsSpace*>(libStairsP)->setPointers(nullptr, nullptr, nullptr, nullptr, libMapRoomP, libOfficeP);  // up and down
+      static_cast<GndLvlSpace*>(libWindowSeatP)->setPointers(nullptr, libStacksP, nullptr, nullptr);
+      static_cast<GndLvlSpace*>(libStacksP)->setPointers(libEntryP, nullptr, nullptr, libWindowSeatP);
+      static_cast<UndergroundSpace*>(libBasementP)->setPointers(nullptr, nullptr, nullptr, nullptr, libOfficeP);  // goes up
+      static_cast<AboveGroundSpace*>(libMapRoomP)->setPointers(libStairsP, libMapRmStairsP, nullptr, nullptr, libStairsP);//????
+      static_cast<StairsSpace*>(libMapRmStairsP)->setPointers(nullptr, nullptr, nullptr, nullptr, libSecretTowerP, libMapRoomP);
+      static_cast<AboveGroundSpace*>(libSecretTowerP)->setPointers(nullptr, nullptr, nullptr, nullptr, libMapRmStairsP);     
 
-    // set pointers to derived classes for use in spaceDescrip.cpp
-      GndLvlSpace *trainStationSpecificP = &trainStation;
-      GndLvlSpace *trainLocomotiveSpecificP = &trainLocomotive;
-      GndLvlSpace *trainPassengerCarSpecificP = &trainPassengerCar;
-      GndLvlSpace *chapelPewsSpecificP = &chapelPews;
-      GndLvlSpace *chapelFrontSpecificP = &chapelFront;
-      StairsSpace *chapelStairsSpecificP = &chapelStairs;
-      UndergroundSpace *chapelSecretPassWestSpecificP = &chapelSecretPassW;
-      UndergroundSpace *chapelSecretPassEastSpecificP = &chapelSecretPassE;
-      StairsSpace *zooStairsSpecificP = &zooStairs;
-      GndLvlSpace *zooEntrySpecificP = &zooEntry;
-      GndLvlSpace *zooParrotsSpecificP = &zooParrots;
-      GndLvlSpace *zooLlamasSpecificP = &zooLlamas;
-      GndLvlSpace *houseSpecificP = &house;
-      GndLvlSpace *courtyardSpecificP = &courtyard;
-      GndLvlSpace *treesSpecificP = &trees;
-      GndLvlSpace *libEntrySpecificP = &libEntry;
-      GndLvlSpace *libOfficeSpecificP = &libOffice;
-      StairsSpace *libStairsSpecificP = &libStairs;
-      GndLvlSpace *libWindowSeatSpecificP = &libWindowSeat;
-      GndLvlSpace *libStacksSpecificP = &libStacks;
-      UndergroundSpace *libBasementSpecificP = &libBasement;
-      AboveGroundSpace *libMapRoomSpecificP = &libMapRoom;
-      StairsSpace *libMapRmStairsSpecificP = &libMapRmStairs;
-      AboveGroundSpace *libSecretTowerSpecificP = &libSecretTower;
+    // set space items
+      trainStationP->setItem(true, lightSwitchP);
+      trainLocomotiveP->setItem(true, powerButtonP);
+      trainPassengerCarP->setItem(true, crackersP);
+      chapelPewsP->setItem(true, flashlightP);
+      chapelFrontP->setItem(true, doorP);
+      chapelSecretPassEP->setItem(true, pushPinP);
+      zooLlamasP->setItem(true, signP);
+      houseP->setItem(true, backpackP);
+      treesP->setItem(true, flowersP);  
+      libEntryP->setItem(true, displayCaseP);
+      libOfficeP->setItem(true, paperP);
+      libWindowSeatP->setItem(true, windowP);
+      libStacksP->setItem(true, mapP);
+      libBasementP->setItem(true, binocularsP);
+      // libMapRoomP->setItem(true, );
+      libMapRmStairsP->setItem(true, libDoorP);
+      libSecretTowerP->setItem(true, treasureP);
 
-      Space* trainStationP = dynamic_cast<Space*>(trainStationSpecificP);
-      Space *trainLocomotiveP = dynamic_cast<Space*>(trainLocomotiveSpecificP);
-      Space *trainPassengerCarP = dynamic_cast<Space*>(trainPassengerCarSpecificP);
-      Space *chapelPewsP = dynamic_cast<Space*>(chapelPewsSpecificP);
-      Space *chapelFrontP = dynamic_cast<Space*>(chapelFrontSpecificP);
-      Space *chapelStairsP = dynamic_cast<Space*>(chapelStairsSpecificP);
-      Space *chapelSecretPassWestP = dynamic_cast<Space*>(chapelSecretPassWestSpecificP);
-      Space *chapelSecretPassEastP = dynamic_cast<Space*>(chapelSecretPassEastSpecificP);
-      Space *zooStairsP = dynamic_cast<Space*>(zooStairsSpecificP);
-      Space *zooEntryP = dynamic_cast<Space*>(zooEntrySpecificP);
-      Space *zooParrotsP = dynamic_cast<Space*>(zooParrotsSpecificP);
-      Space *zooLlamasP = dynamic_cast<Space*>(zooLlamasSpecificP);
-      Space *houseP = dynamic_cast<Space*>(houseSpecificP);
-      Space *courtyardP = dynamic_cast<Space*>(courtyardSpecificP);
-      Space *treesP = dynamic_cast<Space*>(treesSpecificP);
-      Space *libEntryP = dynamic_cast<Space*>(libEntrySpecificP);
-      Space *libOfficeP = dynamic_cast<Space*>(libOfficeSpecificP);
-      Space *libStairsP = dynamic_cast<Space*>(libStairsSpecificP);
-      Space *libWindowSeatP = dynamic_cast<Space*>(libWindowSeatSpecificP);
-      Space *libStacksP = dynamic_cast<Space*>(libStacksSpecificP);
-      Space *libBasementP = dynamic_cast<Space*>(libBasementSpecificP);
-      Space *libMapRoomP = dynamic_cast<Space*>(libMapRoomSpecificP);
-      Space *libMapRmStairsP = dynamic_cast<Space*>(libMapRmStairsSpecificP);
-      Space *libSecretTowerP = dynamic_cast<Space*>(libSecretTowerSpecificP);
-// https://stackoverflow.com/questions/5662719/c-comparing-pointers-of-base-and-derived-classes
+    // set space pointer dependencies
+      // Ex: if the lightSwitchP isn't on, the trainLocoP won't show up when in the trainStation space's menu
+      trainStationP->setPtrDependency(true, trainLocomotiveP, lightSwitchP);
+      trainLocomotiveP->setPtrDependency(true, trainPassengerCarP, powerButtonP);
+      chapelFrontP->setPtrDependency(true, chapelStairsP, doorP);
+      libSecretTowerP->setPtrDependency(true, libMapRmStairsP, libDoorP);
+
 
     // push ALL space object pointers to container
-      vector<Space*> spaceVector = {trainStationP, trainLocomotiveP, trainPassengerCarP, chapelPewsP, chapelFrontP, chapelStairsP, chapelSecretPassWestP, chapelSecretPassEastP, zooStairsP, zooEntryP, zooParrotsP, zooLlamasP, houseP, courtyardP, treesP, libEntryP, libOfficeP, libStairsP, libWindowSeatP, libStacksP, libBasementP, libMapRoomP, libMapRmStairsP, libSecretTowerP};
+      vector<Space*> spaceVector = {trainStationP, trainLocomotiveP, trainPassengerCarP, chapelPewsP, chapelFrontP, chapelStairsP, chapelSecretPassWP, chapelSecretPassEP, zooStairsP, zooEntryP, zooParrotsP, zooLlamasP, houseP, courtyardP, treesP, libEntryP, libOfficeP, libStairsP, libWindowSeatP, libStacksP, libBasementP, libMapRoomP, libMapRmStairsP, libSecretTowerP};
     
-    // tuple of derived class pointers
-      tuple<GndLvlSpace*, GndLvlSpace*, GndLvlSpace*, GndLvlSpace*, GndLvlSpace*, StairsSpace*, UndergroundSpace*, UndergroundSpace*, StairsSpace*, GndLvlSpace*, GndLvlSpace*, GndLvlSpace*, GndLvlSpace*, GndLvlSpace*, GndLvlSpace*, GndLvlSpace*, GndLvlSpace*, StairsSpace*, GndLvlSpace*, GndLvlSpace*, UndergroundSpace*, AboveGroundSpace*, StairsSpace*, AboveGroundSpace*> spaceTuple(trainStationSpecificP, trainLocomotiveSpecificP, trainPassengerCarSpecificP, chapelPewsSpecificP, chapelFrontSpecificP, chapelStairsSpecificP, chapelSecretPassWestSpecificP, chapelSecretPassEastSpecificP, zooStairsSpecificP, zooEntrySpecificP, zooParrotsSpecificP, zooLlamasSpecificP, houseSpecificP, courtyardSpecificP, treesSpecificP, libEntrySpecificP, libOfficeSpecificP, libStairsSpecificP, libWindowSeatSpecificP, libStacksSpecificP, libBasementSpecificP, libMapRoomSpecificP, libMapRmStairsSpecificP, libSecretTowerSpecificP);
-
-    // set up spaces (data, descriptions, etc)
-    setUpSpaceDescriptions(spaceTuple);  
-
     // starting space is the house
     Space *currentSpace = houseP;
 
-    // display title, opening description, and directions
-    cout << "\nThe Secret Treasure\n\n";
-    cout << "long intro\n\n";
-    cout << "Directions: You have " << numRounds << " hours to find the key. An hour is equal to a move from one space to another. Hope you win!\n";
+    game.displayIntro();
 
     // dependency toggles
-    bool flashlightOn = false;
+    // bool flashlightOn = false;
 
     // loop for each turn
-    while (!quit && currentRoundNum <= numRounds) {
+    while (!quit && game.getCurrentRoundNum <= game.getCurrentRoundNum) {
       bool endRound = false;
-      // display numRounds
-      string stars = "*******";
-      cout << endl << stars << " Round " << currentRoundNum << "/" << numRounds;
-      cout << "  " << makeCaptial(currentSpace->getSpaceNameForPrinting());
-      cout  << " " << stars << endl;
+
+      // display new round header
+      game.showNewRound(currentSpace);
 
       // description for current location
       cout << currentSpace->getSpaceDescription();
 
       // item description
       if (currentSpace->isItemTaken() == false) {
-        cout << endl << currentSpace->getItemDescription();
+        cout << endl << currentSpace->getItem()->getItemDescription();
       }
 
       // loop menu and possible actions until user move's location
       while (!endRound && !quit) {
         // data array to be filled
-        int infoArray[8];
-        int numPossibleMoves = currentSpace->getSpacePointers().size();
+        // int infoArray[8];
+        // int numPossibleMoves = currentSpace->getSpacePointers().size();
         
         // show roundMenu and get data from it and user's choice
-        string nameOfDroppedItem = displayRoundMenu(infoArray, hasBackpack, currentSpace, backpack, droppedItemsMap, numPossibleMoves, lightSwitchedOn, powerButtonPushed);
-
-        int userChoiceForThisSpace = infoArray[0];
-        int currentMenuNum = infoArray[1];
-        int numForItem = infoArray[2];
-        bool printBackpack = infoArray[3];
-        bool dropItem = infoArray[4];
-        int useItem = infoArray[5];
-        int pickUpDroppedItem = infoArray[6];
-        // int numOfDroppedItem = infoArray[7];
-
-
+        game.displayRoundMenu(currentSpace, backpack, droppedItemsMap);
+        int userChoiceForThisSpace = game.getUserChoiceForThisSpace();
+// need this??
+// userChoiceForThisSpace == game.getCurrentMenuNum()
         // act according to user's choice
-        if (userChoiceForThisSpace == currentMenuNum) {
+        if (game.getQuit()) {
           quit = true;
         }
         else {
           // move user
-          if (userChoiceForThisSpace >= 1 && userChoiceForThisSpace <= numPossibleMoves) {
-
-            // find the user's choice in the currentSpace's spacePointers (from class)
-            vector<Space*> tempVec = currentSpace->getSpacePointers();
-            string tempName = tempVec[userChoiceForThisSpace-1]->getSpaceName();
+          if (game.getMove()) {
+            string tempName = game.getMoveWhere()->getSpaceName();
 
             // search through spaceVector (from main) to find the space that matches the user's move choice
             for (auto i : spaceVector) {
               if (i->getSpaceName() == tempName) {
-                // cout << "I found it!\n";
+                cout << "I found it!\n";
                 // cout << i << endl;
 
                 // check if it's dependent on flashlight
-                if (i->getSpaceDependency() == "flashlight" && !flashlightOn) {
+                if (i->getSpaceDependency()->getItemName() == "flashlight" && !static_cast<ItemToggle*>(flashlightP)->getOn()) {
                   cout << "It's too dark in there.\n";
-
                 }
                 else {
                   // cout << "space Depen: "<< i->getSpaceDependency() << endl;
                   // cout <<"flashlight on? "<<flashlightOn<<endl;
                   currentSpace = i;
-                  currentRoundNum++;
+                  game.updateRoundNum();
                   endRound = true;                  
                 }
               }
@@ -263,7 +234,7 @@ int main() {
           }
 
           // display backpack
-          else if (printBackpack) {
+          else if (game.getOpenBackpack()) {
             // cout <<"in printbackpack\n";
             if (backpack.empty()) {
               cout << "Your backpack is empty.\n";
@@ -284,7 +255,7 @@ int main() {
           }
 
           // drop item
-          else if (dropItem) {
+          else if (game.getDropItem()) {
             cout << "What do you want to drop?\n";
             // get item to be dropped from user
             unsigned item = chooseItemFromBackpack(backpack);
@@ -311,20 +282,20 @@ int main() {
           }
 
           // use item
-          else if (useItem) {
+          else if (game.getUseItem()) {
             cout << "What do you want to use?\n";
             // get item to be used from user
             unsigned item = chooseItemFromBackpack(backpack);
 
             // if last num on menu, do nothing
             if (item < backpack.size()) {
-              if (currentSpace->getSpaceDependency() == backpack[item] && currentSpace->getSpaceDependency() != "flashlight") {
+              if (currentSpace->getSpaceDependency()->getItemName() == backpack[item] && currentSpace->getSpaceDependency()->getItemName() != "flashlight") {
                 cout <<"Yes, use it here!\n";
-                currentSpace->getDescriptionAfterDependency();
+                currentSpace->getSpaceDependency()->getDescriptionAfterDependency();
               }
               else if (backpack[item] == "flashlight") {
-                flashlightOn = !flashlightOn;
-                if (flashlightOn) {
+                static_cast<ItemToggle*>(flashlightP)->setOn();
+                if (static_cast<ItemToggle*>(flashlightP)->getOn()) {
                   cout << "The flashlight is on.\n";
                 }
                 else {
@@ -340,49 +311,50 @@ int main() {
           }
 
           // pick up dropped item
-          else if (pickUpDroppedItem) {
+          else if (game.getPickUpDroppedItem()) {
             // add to backpack
-            backpack.push_back(nameOfDroppedItem);
+            backpack.push_back(game.getNameOfDroppedItem());
             // remove from droppedItem map
             map<string, string>::iterator itr;
-            itr = droppedItemsMap.find(nameOfDroppedItem);
+            itr = droppedItemsMap.find(game.getNameOfDroppedItem());
             droppedItemsMap.erase(itr);
           }
 
           // do action on item
-          else if (userChoiceForThisSpace == numForItem) {
-            int actionNum = currentSpace->getItemActionNum();
-
+          else if (userChoiceForThisSpace == game.getNumForItem()) {
+            int actionNum = currentSpace->getItem()->getItemActionNum();
+            string itemName = currentSpace->getItem()->getItemName();
             // if itemAction isn't 1, add to dependencyVec
             // if (actionNum != 1) {
             //   dependencyVec.push_back()
             // }
+
             // mark finished dependencies
-            if (currentSpace->getItemName() == "lightSwitch") {
-              lightSwitchedOn = true;
-            } 
-            else if (currentSpace->getItemName() == "powerButton") {
-              powerButtonPushed = true;
-            }
+            // if (itemName == "lightSwitch") {
+            //   lightSwitchedOn = true;
+            // } 
+            // else if (itemName == "powerButton") {
+            //   powerButtonPushed = true;
+            // }
 
             // get backpack
-            if (currentSpace->getItemName() == "backpack") {
-              hasBackpack = true;
+            if (itemName == "backpack") {
+              game.setHasBackpack();
               currentSpace->setItemTaken(true);
             }
 
             // put item in backpack unless it IS the backpack
-            if (hasBackpack && actionNum == 1 && currentSpace->getItemName() != "backpack") {
+            if (game.getHasBackpack() && actionNum == 1 && itemName != "backpack") {
               // mark as taken in object
               currentSpace->setItemTaken(true);
 
               // add to backpack container
-              backpack.push_back(currentSpace->getItemName());
+              backpack.push_back(itemName);
               // cout <<"empty? "<<backpack.empty()<<endl;
 
-              for (string i:backpack) {
+              // for (string i:backpack) {
                 // cout << i << " ";
-              }
+              // }
             }
             else if (actionNum == 2 || actionNum == 3) {
               currentSpace->setItemTaken(true);
@@ -394,7 +366,7 @@ int main() {
               cout << "how to deal with this??\n";
             }
             // display info after taking action
-            cout << currentSpace->getDescriptionAfterItem();
+            cout << currentSpace->getItem()->getDescriptionAfterItem();
           }
         }        
       }
@@ -407,26 +379,7 @@ int main() {
 };
 
 
-/********************************************
- ** Function:     convertEnding
- ** Description:  Helper function to main. Add -s to pluralize words
- ** Parameters:       The word and the number describing it
- ** Pre-Conditions:   none
- ** Post-Conditions:  Returns the singular or plural of the word
- ********************************************/
-// convert ending to add -s
-string convertEnding(string word, int num) {
-  if (num == 1) {
-    return word;
-  }
-  return word + 's';
-};
 
-string makeCaptial(string wordIn) {
-  char firstLetter = wordIn.at(0);
-  wordIn.erase(0,1);
-  return wordIn.insert(0, 1, toupper(firstLetter));
-}
 
 
 // print backpack; returns array index of choice 

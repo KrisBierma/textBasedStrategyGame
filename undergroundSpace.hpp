@@ -12,7 +12,9 @@ class UndergroundSpace : public Space {
   private:
     Space *up;
   public:
-    UndergroundSpace();
+    UndergroundSpace(string spaceNameIn, string printSpaceNameIn, string spaceDescrptionIn);
+
+    // UndergroundSpace();
     // ~UndergroundSpace();
     void setPointers(Space *northIn, Space *eastIn, Space *southIn, Space *westIn, Space *upIn);
 

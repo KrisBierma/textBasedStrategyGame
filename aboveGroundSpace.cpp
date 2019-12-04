@@ -4,7 +4,7 @@
 
 #include "aboveGroundSpace.hpp"
 
-AboveGroundSpace::AboveGroundSpace(){};
+AboveGroundSpace::AboveGroundSpace(string spaceNameIn, string printSpaceNameIn, string spaceDescrptionIn) : Space(spaceNameIn, printSpaceNameIn, spaceDescrptionIn) {};
 
 // AboveGroundSpace::~AboveGroundSpace() {};
 

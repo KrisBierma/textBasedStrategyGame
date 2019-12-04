@@ -18,7 +18,7 @@ class StairsSpace : public Space {
     // upOrDown location; ????
     string location; // "up" "down"
   public:
-    StairsSpace();
+    StairsSpace(string spaceNameIn, string printSpaceNameIn, string spaceDescrptionIn);
     // ~StairsSpace();
     void setPointers(Space *northIn, Space *eastIn, Space *southIn, Space *westIn, Space *upIn, Space *downIn);
 

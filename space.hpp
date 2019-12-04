@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include "item.hpp"
 using std::vector;
 using std::string;
 
@@ -16,20 +17,20 @@ class Space {
     string spaceNameForPrinting;
     string spaceDescrption;
 
-    // bool hasBackpack = false;
     bool hasItem = false;
-    string itemName;
-    string itemNameForPrinting;
-    string itemDescription;
-    int itemActionNum;
+    Item *item;
     bool itemTaken = false;
-    string descriptionAfterItem;
 
     bool hasDependency = false;
-    string spaceDependency;
-    string descriptionAfterDependency;    
+    Item *spaceDependency;
+    // string spaceDependency;
+    // string descriptionAfterDependency;    
 
-    bool haveItemNeededInBackpack = false;
+    // bool haveItemNeededInBackpack = false;
+
+    bool hasPtrDependency;
+    Space *spacePtrDepend;
+    Item *itemItsDependentOn;
 
     Space *north;
     Space *east;
@@ -38,16 +39,18 @@ class Space {
     vector<Space*> pointerHolder;
 
   public:
+    Space(string spaceNameIn, string printSpaceNameIn, string spaceDescrptionIn);
     ~Space();
 
-    void setDescriptions(string spaceNameIn, string printSpaceNameIn, string spaceDescrptionIn);
+    // void setDescriptions();
 
-    void setItem(bool hasItem, int itemActionNumIn, string itemNameIn, string printItemNameIn, string itemDescriptionIn, string descriptionAfterItem);
+    void setItem(bool hasItem, Item *itemIn);
 
-    void setDependency(bool hasDependency, string spaceDepend, string descripAfterDepend);
+    void setDependency(bool hasDependencyIn, Item *dependencyIn);
 
+    void setPtrDependency(bool hasPtrDepIn, Space *spacePtrIn, Item *dependendOnIn);
 
-    void setItemTaken(bool yesOrNo);
+    // void setItemTaken(bool yesOrNo);
 
     vector<Space*> getSpacePointers();
     string getSpaceName();
@@ -55,18 +58,24 @@ class Space {
     string getSpaceDescription();
 
     bool hasSpaceDependency();
-    string getSpaceDependency();
-    string getDescriptionAfterDependency();
+    Item* getSpaceDependency();
+    // string getDescriptionAfterDependency();
+
+    bool getHasPointerDependency();
+    Space* getSpacePtrDepend();
+    Item* getItemPtrDependentOn();
 
     // bool getHasBackpack();
-    string getItemName();
-    string getItemNameForPrinting();
-    int getItemActionNum();
+    // string getItemName();
+    // string getItemNameForPrinting();
+    // int getItemActionNum();
     bool getHasItem();
     bool isItemTaken(); // a getter
-    string getVerbForAction();
-    string getItemDescription();
-    string getDescriptionAfterItem();
+    void setItemTaken(bool yesOrNo);
+    Item* getItem();
+    // string getVerbForAction();
+    // string getItemDescription();
+    // string getDescriptionAfterItem();
 
 
     virtual string getSpaceType() = 0;

@@ -6,7 +6,8 @@
 
 #include "stairsSpace.hpp"
 
-StairsSpace::StairsSpace() {};
+StairsSpace::StairsSpace(string spaceNameIn, string printSpaceNameIn, string spaceDescrptionIn) : Space(spaceNameIn, printSpaceNameIn, spaceDescrptionIn) {};
+
 
 // StairsSpace::~StairsSpace() {};
 

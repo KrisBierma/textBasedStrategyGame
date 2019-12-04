@@ -40,6 +40,7 @@ using std::tuple;
 using std::stringstream;
 
 int chooseItemFromBackpack(vector<string> &backpack);
+string makeCaptial(string wordIn);
 
 int main() {
   // showStartMenu
@@ -58,131 +59,155 @@ int main() {
     vector<string> backpack;
     bool hasBackpack = false;
 
+    // container to hold completed dependency actions (dependency items are checked in the backpack)
+    // vector<string> dependencyVec;
+    // dependency actions
+    bool lightSwitchedOn = false;
+    bool powerButtonPushed = false;
+
     // map to hold dropped items: key is item, value is space
     map<string, string> droppedItemsMap;
 
     // instantiate spaces
-    GndLvlSpace trainStation;
-    GndLvlSpace trainLocomotive;
-    GndLvlSpace trainPassengerCar;
-    GndLvlSpace chapelPews;
-    GndLvlSpace chapelFront;
-    StairsSpace chapelStairs;
-    UndergroundSpace chapelSecretPassW;
-    UndergroundSpace chapelSecretPassE;
-    StairsSpace zooStairs;
-    GndLvlSpace zooEntry;
-    GndLvlSpace zooParrots;
-    GndLvlSpace zooLlamas;
-    GndLvlSpace house;
-    GndLvlSpace courtyard;
-    GndLvlSpace trees;
-    GndLvlSpace libEntry;
-    GndLvlSpace libOffice;
-    StairsSpace libStairs;
-    GndLvlSpace libWindowSeat;
-    GndLvlSpace libStacks;
-    UndergroundSpace libBasement;
-    AboveGroundSpace libMapRoom;
-    StairsSpace libMapRmStairs;
-    AboveGroundSpace libSecretTower;
+      GndLvlSpace trainStation;
+      GndLvlSpace trainLocomotive;
+      GndLvlSpace trainPassengerCar;
+      GndLvlSpace chapelPews;
+      GndLvlSpace chapelFront;
+      StairsSpace chapelStairs;
+      UndergroundSpace chapelSecretPassW;
+      UndergroundSpace chapelSecretPassE;
+      StairsSpace zooStairs;
+      GndLvlSpace zooEntry;
+      GndLvlSpace zooParrots;
+      GndLvlSpace zooLlamas;
+      GndLvlSpace house;
+      GndLvlSpace courtyard;
+      GndLvlSpace trees;
+      GndLvlSpace libEntry;
+      GndLvlSpace libOffice;
+      StairsSpace libStairs;
+      GndLvlSpace libWindowSeat;
+      GndLvlSpace libStacks;
+      UndergroundSpace libBasement;
+      AboveGroundSpace libMapRoom;
+      StairsSpace libMapRmStairs;
+      AboveGroundSpace libSecretTower;
 
     // set pointers to space objects for use in main.cpp
-    Space *trainStationP = &trainStation;
-    Space *trainLocomotiveP = &trainLocomotive;
-    Space *trainPassengerCarP = &trainPassengerCar;
-    Space *chapelPewsP = &chapelPews;
-    Space *chapelFrontP = &chapelFront;
-    Space *chapelStairsP = &chapelStairs;
-    Space *chapelSecretPassWestP = &chapelSecretPassW;
-    Space *chapelSecretPassEastP = &chapelSecretPassE;
-    Space *zooStairsP = &zooStairs;
-    Space *zooEntryP = &zooEntry;
-    Space *zooParrotsP = &zooParrots;
-    Space *zooLlamasP = &zooLlamas;
-    Space *houseP = &house;
-    Space *courtyardP = &courtyard;
-    Space *treesP = &trees;
-    Space *libEntryP = &libEntry;
-    Space *libOfficeP = &libOffice;
-    Space *libStairsP = &libStairs;
-    Space *libWindowSeatP = &libWindowSeat;
-    Space *libStacksP = &libStacks;
-    Space *libBasementP = &libBasement;
-    Space *libMapRoomP = &libMapRoom;
-    Space *libMapRmStairsP = &libMapRmStairs;
-    Space *libSecretTowerP = &libSecretTower;
+      // Space *trainStationP = &trainStation;
+      // Space *trainLocomotiveP = &trainLocomotive;
+      // Space *trainPassengerCarP = &trainPassengerCar;
+      // Space *chapelPewsP = &chapelPews;
+      // Space *chapelFrontP = &chapelFront;
+      // Space *chapelStairsP = &chapelStairs;
+      // Space *chapelSecretPassWestP = &chapelSecretPassW;
+      // Space *chapelSecretPassEastP = &chapelSecretPassE;
+      // Space *zooStairsP = &zooStairs;
+      // Space *zooEntryP = &zooEntry;
+      // Space *zooParrotsP = &zooParrots;
+      // Space *zooLlamasP = &zooLlamas;
+      // Space *houseP = &house;
+      // Space *courtyardP = &courtyard;
+      // Space *treesP = &trees;
+      // Space *libEntryP = &libEntry;
+      // Space *libOfficeP = &libOffice;
+      // Space *libStairsP = &libStairs;
+      // Space *libWindowSeatP = &libWindowSeat;
+      // Space *libStacksP = &libStacks;
+      // Space *libBasementP = &libBasement;
+      // Space *libMapRoomP = &libMapRoom;
+      // Space *libMapRmStairsP = &libMapRmStairs;
+      // Space *libSecretTowerP = &libSecretTower;
 
     // set pointers to derived classes for use in spaceDescrip.cpp
-    GndLvlSpace *trainStationSpecificP = &trainStation;
-    GndLvlSpace *trainLocomotiveSpecificP = &trainLocomotive;
-    GndLvlSpace *trainPassengerCarSpecificP = &trainPassengerCar;
-    GndLvlSpace *chapelPewsSpecificP = &chapelPews;
-    GndLvlSpace *chapelFrontSpecificP = &chapelFront;
-    StairsSpace *chapelStairsSpecificP = &chapelStairs;
-    UndergroundSpace *chapelSecretPassWestSpecificP = &chapelSecretPassW;
-    UndergroundSpace *chapelSecretPassEastSpecificP = &chapelSecretPassE;
-    StairsSpace *zooStairsSpecificP = &zooStairs;
-    GndLvlSpace *zooEntrySpecificP = &zooEntry;
-    GndLvlSpace *zooParrotsSpecificP = &zooParrots;
-    GndLvlSpace *zooLlamasSpecificP = &zooLlamas;
-    GndLvlSpace *houseSpecificP = &house;
-    GndLvlSpace *courtyardSpecificP = &courtyard;
-    GndLvlSpace *treesSpecificP = &trees;
-    GndLvlSpace *libEntrySpecificP = &libEntry;
-    GndLvlSpace *libOfficeSpecificP = &libOffice;
-    StairsSpace *libStairsSpecificP = &libStairs;
-    GndLvlSpace *libWindowSeatSpecificP = &libWindowSeat;
-    GndLvlSpace *libStacksSpecificP = &libStacks;
-    UndergroundSpace *libBasementSpecificP = &libBasement;
-    AboveGroundSpace *libMapRoomSpecificP = &libMapRoom;
-    StairsSpace *libMapRmStairsSpecificP = &libMapRmStairs;
-    AboveGroundSpace *libSecretTowerSpecificP = &libSecretTower;
+      GndLvlSpace *trainStationSpecificP = &trainStation;
+      GndLvlSpace *trainLocomotiveSpecificP = &trainLocomotive;
+      GndLvlSpace *trainPassengerCarSpecificP = &trainPassengerCar;
+      GndLvlSpace *chapelPewsSpecificP = &chapelPews;
+      GndLvlSpace *chapelFrontSpecificP = &chapelFront;
+      StairsSpace *chapelStairsSpecificP = &chapelStairs;
+      UndergroundSpace *chapelSecretPassWestSpecificP = &chapelSecretPassW;
+      UndergroundSpace *chapelSecretPassEastSpecificP = &chapelSecretPassE;
+      StairsSpace *zooStairsSpecificP = &zooStairs;
+      GndLvlSpace *zooEntrySpecificP = &zooEntry;
+      GndLvlSpace *zooParrotsSpecificP = &zooParrots;
+      GndLvlSpace *zooLlamasSpecificP = &zooLlamas;
+      GndLvlSpace *houseSpecificP = &house;
+      GndLvlSpace *courtyardSpecificP = &courtyard;
+      GndLvlSpace *treesSpecificP = &trees;
+      GndLvlSpace *libEntrySpecificP = &libEntry;
+      GndLvlSpace *libOfficeSpecificP = &libOffice;
+      StairsSpace *libStairsSpecificP = &libStairs;
+      GndLvlSpace *libWindowSeatSpecificP = &libWindowSeat;
+      GndLvlSpace *libStacksSpecificP = &libStacks;
+      UndergroundSpace *libBasementSpecificP = &libBasement;
+      AboveGroundSpace *libMapRoomSpecificP = &libMapRoom;
+      StairsSpace *libMapRmStairsSpecificP = &libMapRmStairs;
+      AboveGroundSpace *libSecretTowerSpecificP = &libSecretTower;
+
+      Space* trainStationP = dynamic_cast<Space*>(trainStationSpecificP);
+      Space *trainLocomotiveP = dynamic_cast<Space*>(trainLocomotiveSpecificP);
+      Space *trainPassengerCarP = dynamic_cast<Space*>(trainPassengerCarSpecificP);
+      Space *chapelPewsP = dynamic_cast<Space*>(chapelPewsSpecificP);
+      Space *chapelFrontP = dynamic_cast<Space*>(chapelFrontSpecificP);
+      Space *chapelStairsP = dynamic_cast<Space*>(chapelStairsSpecificP);
+      Space *chapelSecretPassWestP = dynamic_cast<Space*>(chapelSecretPassWestSpecificP);
+      Space *chapelSecretPassEastP = dynamic_cast<Space*>(chapelSecretPassEastSpecificP);
+      Space *zooStairsP = dynamic_cast<Space*>(zooStairsSpecificP);
+      Space *zooEntryP = dynamic_cast<Space*>(zooEntrySpecificP);
+      Space *zooParrotsP = dynamic_cast<Space*>(zooParrotsSpecificP);
+      Space *zooLlamasP = dynamic_cast<Space*>(zooLlamasSpecificP);
+      Space *houseP = dynamic_cast<Space*>(houseSpecificP);
+      Space *courtyardP = dynamic_cast<Space*>(courtyardSpecificP);
+      Space *treesP = dynamic_cast<Space*>(treesSpecificP);
+      Space *libEntryP = dynamic_cast<Space*>(libEntrySpecificP);
+      Space *libOfficeP = dynamic_cast<Space*>(libOfficeSpecificP);
+      Space *libStairsP = dynamic_cast<Space*>(libStairsSpecificP);
+      Space *libWindowSeatP = dynamic_cast<Space*>(libWindowSeatSpecificP);
+      Space *libStacksP = dynamic_cast<Space*>(libStacksSpecificP);
+      Space *libBasementP = dynamic_cast<Space*>(libBasementSpecificP);
+      Space *libMapRoomP = dynamic_cast<Space*>(libMapRoomSpecificP);
+      Space *libMapRmStairsP = dynamic_cast<Space*>(libMapRmStairsSpecificP);
+      Space *libSecretTowerP = dynamic_cast<Space*>(libSecretTowerSpecificP);
+// https://stackoverflow.com/questions/5662719/c-comparing-pointers-of-base-and-derived-classes
 
     // push ALL space object pointers to container
-    vector<Space*> spaceVector = {trainStationP, trainLocomotiveP, trainPassengerCarP, chapelPewsP, chapelFrontP, chapelStairsP, chapelSecretPassWestP, chapelSecretPassEastP, zooStairsP, zooEntryP, zooParrotsP, zooLlamasP, houseP, courtyardP, treesP, libEntryP, libOfficeP, libStairsP, libWindowSeatP, libStacksP, libBasementP, libMapRoomP, libMapRmStairsP, libSecretTowerP};
+      vector<Space*> spaceVector = {trainStationP, trainLocomotiveP, trainPassengerCarP, chapelPewsP, chapelFrontP, chapelStairsP, chapelSecretPassWestP, chapelSecretPassEastP, zooStairsP, zooEntryP, zooParrotsP, zooLlamasP, houseP, courtyardP, treesP, libEntryP, libOfficeP, libStairsP, libWindowSeatP, libStacksP, libBasementP, libMapRoomP, libMapRmStairsP, libSecretTowerP};
     
-    // container for specific dervided Space classes
-    vector<UndergroundSpace*> underGroundSpaceVect = {chapelSecretPassWestSpecificP, chapelSecretPassEastSpecificP, libBasementSpecificP};
-
-    vector<GndLvlSpace*> groundLvlSpaceVec = {trainStationSpecificP, trainLocomotiveSpecificP, trainPassengerCarSpecificP, chapelPewsSpecificP, chapelFrontSpecificP, zooEntrySpecificP, zooParrotsSpecificP, zooLlamasSpecificP, houseSpecificP, courtyardSpecificP, treesSpecificP, libEntrySpecificP, libOfficeSpecificP, libWindowSeatSpecificP, libStacksSpecificP};
-   
-    vector<AboveGroundSpace*> aboveGroundSpaceVec = {libMapRoomSpecificP, libSecretTowerSpecificP};
-   
-    vector<StairsSpace*> stairsSpaceVec = {chapelStairsSpecificP, zooStairsSpecificP, libMapRmStairsSpecificP, libStairsSpecificP};
-
-    // set up objects' data
-    // setSpaceData_underGround(underGroundSpaceVect);
-    // setSpaceData_aboveGround(aboveGroundSpaceVec);
-    // setSpaceData_groundLvl(groundLvlSpaceVec);
-    // setSpaceData_stairs(stairsSpaceVec);
-
-    // tuple<Space*> hi(chapelPewsP);
-
     // tuple of derived class pointers
-    tuple<GndLvlSpace*, GndLvlSpace*, GndLvlSpace*, GndLvlSpace*, GndLvlSpace*, StairsSpace*, UndergroundSpace*, UndergroundSpace*, StairsSpace*, GndLvlSpace*, GndLvlSpace*, GndLvlSpace*, GndLvlSpace*, GndLvlSpace*, GndLvlSpace*, GndLvlSpace*, GndLvlSpace*, StairsSpace*, GndLvlSpace*, GndLvlSpace*, UndergroundSpace*, AboveGroundSpace*, StairsSpace*, AboveGroundSpace*> spaceTuple(trainStationSpecificP, trainLocomotiveSpecificP, trainPassengerCarSpecificP, chapelPewsSpecificP, chapelFrontSpecificP, chapelStairsSpecificP, chapelSecretPassWestSpecificP, chapelSecretPassEastSpecificP, zooStairsSpecificP, zooEntrySpecificP, zooParrotsSpecificP, zooLlamasSpecificP, houseSpecificP, courtyardSpecificP, treesSpecificP, libEntrySpecificP, libOfficeSpecificP, libStairsSpecificP, libWindowSeatSpecificP, libStacksSpecificP, libBasementSpecificP, libMapRoomSpecificP, libMapRmStairsSpecificP, libSecretTowerSpecificP);
+      tuple<GndLvlSpace*, GndLvlSpace*, GndLvlSpace*, GndLvlSpace*, GndLvlSpace*, StairsSpace*, UndergroundSpace*, UndergroundSpace*, StairsSpace*, GndLvlSpace*, GndLvlSpace*, GndLvlSpace*, GndLvlSpace*, GndLvlSpace*, GndLvlSpace*, GndLvlSpace*, GndLvlSpace*, StairsSpace*, GndLvlSpace*, GndLvlSpace*, UndergroundSpace*, AboveGroundSpace*, StairsSpace*, AboveGroundSpace*> spaceTuple(trainStationSpecificP, trainLocomotiveSpecificP, trainPassengerCarSpecificP, chapelPewsSpecificP, chapelFrontSpecificP, chapelStairsSpecificP, chapelSecretPassWestSpecificP, chapelSecretPassEastSpecificP, zooStairsSpecificP, zooEntrySpecificP, zooParrotsSpecificP, zooLlamasSpecificP, houseSpecificP, courtyardSpecificP, treesSpecificP, libEntrySpecificP, libOfficeSpecificP, libStairsSpecificP, libWindowSeatSpecificP, libStacksSpecificP, libBasementSpecificP, libMapRoomSpecificP, libMapRmStairsSpecificP, libSecretTowerSpecificP);
 
-    
-
-    // (descriptions, etc)
-    setUpSpaceDescriptions(spaceVector, spaceTuple);  
+    // set up spaces (data, descriptions, etc)
+    setUpSpaceDescriptions(spaceTuple);  
 
     // starting space is the house
     Space *currentSpace = houseP;
 
     // display title, opening description, and directions
-    cout << "The Search for the Key\n\n";
+    cout << "\nThe Secret Treasure\n\n";
     cout << "long intro\n\n";
     cout << "Directions: You have " << numRounds << " hours to find the key. An hour is equal to a move from one space to another. Hope you win!\n";
+
+    // dependency toggles
+    bool flashlightOn = false;
 
     // loop for each turn
     while (!quit && currentRoundNum <= numRounds) {
       bool endRound = false;
       // display numRounds
-      cout << endl << "******* Round " << currentRoundNum << "/" << numRounds << " *******" << endl;
+      string stars = "*******";
+      cout << endl << stars << " Round " << currentRoundNum << "/" << numRounds;
+      cout << "  " << makeCaptial(currentSpace->getSpaceNameForPrinting());
+      cout  << " " << stars << endl;
 
       // description for current location
-      cout << currentSpace->getSpaceDescription() << endl << endl;
+      cout << currentSpace->getSpaceDescription();
+
+      // item description
+      if (currentSpace->isItemTaken() == false) {
+        cout << endl << currentSpace->getItemDescription();
+      }
 
       // loop menu and possible actions until user move's location
       while (!endRound && !quit) {
@@ -191,7 +216,7 @@ int main() {
         int numPossibleMoves = currentSpace->getSpacePointers().size();
         
         // show roundMenu and get data from it and user's choice
-        string nameOfDroppedItem = displayRoundMenu(infoArray, hasBackpack, currentSpace, backpack, droppedItemsMap, numPossibleMoves);
+        string nameOfDroppedItem = displayRoundMenu(infoArray, hasBackpack, currentSpace, backpack, droppedItemsMap, numPossibleMoves, lightSwitchedOn, powerButtonPushed);
 
         int userChoiceForThisSpace = infoArray[0];
         int currentMenuNum = infoArray[1];
@@ -218,13 +243,23 @@ int main() {
             // search through spaceVector (from main) to find the space that matches the user's move choice
             for (auto i : spaceVector) {
               if (i->getSpaceName() == tempName) {
-                cout << "I found it!\n";
+                // cout << "I found it!\n";
                 // cout << i << endl;
-                currentSpace = i;
+
+                // check if it's dependent on flashlight
+                if (i->getSpaceDependency() == "flashlight" && !flashlightOn) {
+                  cout << "It's too dark in there.\n";
+
+                }
+                else {
+                  // cout << "space Depen: "<< i->getSpaceDependency() << endl;
+                  // cout <<"flashlight on? "<<flashlightOn<<endl;
+                  currentSpace = i;
+                  currentRoundNum++;
+                  endRound = true;                  
+                }
               }
             }
-            currentRoundNum++;
-            endRound = true;
           }
 
           // display backpack
@@ -283,8 +318,18 @@ int main() {
 
             // if last num on menu, do nothing
             if (item < backpack.size()) {
-              if (currentSpace->getSpaceDependency() == backpack[item]) {
+              if (currentSpace->getSpaceDependency() == backpack[item] && currentSpace->getSpaceDependency() != "flashlight") {
                 cout <<"Yes, use it here!\n";
+                currentSpace->getDescriptionAfterDependency();
+              }
+              else if (backpack[item] == "flashlight") {
+                flashlightOn = !flashlightOn;
+                if (flashlightOn) {
+                  cout << "The flashlight is on.\n";
+                }
+                else {
+                  cout << "The flashlight is off.\n";
+                }
               }
               else {
                 cout << "That does nothing here.\n";
@@ -307,6 +352,18 @@ int main() {
           // do action on item
           else if (userChoiceForThisSpace == numForItem) {
             int actionNum = currentSpace->getItemActionNum();
+
+            // if itemAction isn't 1, add to dependencyVec
+            // if (actionNum != 1) {
+            //   dependencyVec.push_back()
+            // }
+            // mark finished dependencies
+            if (currentSpace->getItemName() == "lightSwitch") {
+              lightSwitchedOn = true;
+            } 
+            else if (currentSpace->getItemName() == "powerButton") {
+              powerButtonPushed = true;
+            }
 
             // get backpack
             if (currentSpace->getItemName() == "backpack") {
@@ -337,7 +394,7 @@ int main() {
               cout << "how to deal with this??\n";
             }
             // display info after taking action
-            cout << currentSpace->getDescriptionAfterDependency();
+            cout << currentSpace->getDescriptionAfterItem();
           }
         }        
       }
@@ -364,6 +421,12 @@ string convertEnding(string word, int num) {
   }
   return word + 's';
 };
+
+string makeCaptial(string wordIn) {
+  char firstLetter = wordIn.at(0);
+  wordIn.erase(0,1);
+  return wordIn.insert(0, 1, toupper(firstLetter));
+}
 
 
 // print backpack; returns array index of choice 

@@ -18,7 +18,7 @@ using std::stringstream;
 
 string toString(int numIn);
 
-string displayRoundMenu(int *infoArray, bool hasBackpack, Space *currentSpace, vector<string> &backpack, map<string, string> &droppedItemsMap, int numPossibleMoves) {
+string displayRoundMenu(int *infoArray, bool hasBackpack, Space *currentSpace, vector<string> &backpack, map<string, string> &droppedItemsMap, int numPossibleMoves, bool lightSwitchedOn, bool powerButtonPushed) {
 
   // create menu
   vector<string> spaceMenuChoices;
@@ -27,7 +27,6 @@ string displayRoundMenu(int *infoArray, bool hasBackpack, Space *currentSpace, v
   string choice;
   // get possible spaces to move to
   vector<Space*> tempHolder = currentSpace->getSpacePointers();
-  
   for (unsigned j = 0; j < tempHolder.size(); j++) {
     choice = "" + toString(j+1) + ": Go to ";
     choice += tempHolder[j]->getSpaceNameForPrinting();
@@ -36,21 +35,30 @@ string displayRoundMenu(int *infoArray, bool hasBackpack, Space *currentSpace, v
   }
 
   int numForItem;
-  // int nameOfDroppedItemsHere;
   map<int,string> droppedItemsMenuNums;  
   // add backpack to menu if the currentSpace is house
-  // add item to menu if there is one and it's still in it's original location and the user has a backpack
+  // add current space's item to menu if there is one and it's still in it's original location and the user has a backpack and the current room's dependency is True
   // add items that have been dropped in currentSpace
-  if ((currentSpace->getHasItem() && !currentSpace->isItemTaken() && hasBackpack && !currentSpace->hasSpaceDependency())  || (currentSpace->getSpaceName() == "house" && !currentSpace->isItemTaken())) {
-    choice = toString(currentMenuNum) + ": ";
-    choice += currentSpace->getVerbForAction() + " ";
-    choice += currentSpace->getItemNameForPrinting();
+  string thisName = currentSpace->getSpaceName();
+  if ((currentSpace->getHasItem() && !currentSpace->isItemTaken() && hasBackpack && !currentSpace->hasSpaceDependency())  || (thisName == "house" && !currentSpace->isItemTaken())) {
+    bool keepGoing = true;
 
-    spaceMenuChoices.push_back(choice);
-    numForItem = currentMenuNum;
-    currentMenuNum++;
+    if ((thisName == "trainLoco" && !lightSwitchedOn) || (thisName == "trainPassCar" && !powerButtonPushed)) {
+      keepGoing = false;
+      // cout << "keepgoing = false\n";
+    }
+    if (keepGoing) {
+      // cout <<"in keep going\n";
+      choice = toString(currentMenuNum) + ": ";
+      choice += currentSpace->getVerbForAction() + " ";
+      choice += currentSpace->getItemNameForPrinting();
 
-    cout << currentSpace->getItemDescription();
+      spaceMenuChoices.push_back(choice);
+      numForItem = currentMenuNum;
+      currentMenuNum++;
+
+      // cout << currentSpace->getItemDescription();      
+    }
   }
   else {
     // if no item available

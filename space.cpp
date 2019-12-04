@@ -12,31 +12,26 @@ Space::~Space() {
   vector<Space*>().swap(pointerHolder);
 };
 
-// void Space::setData(string spaceNameIn, bool hasItemIn, string itemNameIn, int itemActionNumIn, Space *northIn, Space *eastIn, Space *southIn, Space *westIn) {
-//   spaceName = spaceNameIn;
-//   hasItem = hasItemIn;
-//   itemName = itemNameIn;
-//   itemActionNum = itemActionNumIn;
-//   north = northIn;
-//   east = eastIn;
-//   south = southIn;
-//   west = westIn;
+void Space::setDescriptions(string spaceNameIn, string printSpaceNameIn, string spaceDescrptionIn) {
+  spaceNameForPrinting = printSpaceNameIn;
+  spaceDescrption = spaceDescrptionIn;
+  spaceName = spaceNameIn;
+};
 
-//   if (north != nullptr) {
-//     pointerHolder.push_back(north);
-//   }
-//   if (east != nullptr) {
-//     pointerHolder.push_back(east);
-//   }
-//   if (south != nullptr) {
-//     pointerHolder.push_back(south);
-//   }
-//   if (west != nullptr) {
-//     pointerHolder.push_back(west);
-//   }
+void Space::setItem(bool hasItemIn, int itemActionNumIn, string itemNameIn, string printItemNameIn, string itemDescriptionIn, string descriptionAfterItemIn) {
+  hasItem = hasItemIn;
+  itemName = itemNameIn;
+  itemNameForPrinting = printItemNameIn;
+  itemDescription = itemDescriptionIn;
+  itemActionNum = itemActionNumIn;
+  descriptionAfterItem = descriptionAfterItemIn;
+};
 
-// };
-
+void Space::setDependency(bool hasDependencyIn, string spaceDependIn, string descripAfterDependIn) {
+  hasDependency = hasDependencyIn;
+  spaceDependency = spaceDependIn;
+  descriptionAfterDependency = descripAfterDependIn;  
+};
 
 
 // gettters
@@ -104,6 +99,11 @@ string Space::getItemDescription() {
   return itemDescription;
 };
 
+string Space::getDescriptionAfterItem() {
+  return descriptionAfterItem;
+};
+
+
 string Space::getDescriptionAfterDependency() {
   return descriptionAfterDependency;
 };
@@ -132,14 +132,7 @@ void Space::setItemTaken(bool yesOrNo) {
   itemTaken = yesOrNo;
 }
 
-void Space::setDescriptions(string printSpaceNameIn, string printItemNameIn, string spaceDescrptionIn, string itemDescriptionIn, string spaceDepend, string descripAfterDepend) {
-  spaceNameForPrinting = printSpaceNameIn;
-  itemNameForPrinting = printItemNameIn;
-  spaceDescrption = spaceDescrptionIn;
-  itemDescription = itemDescriptionIn;
-  spaceDependency = spaceDepend;
-  descriptionAfterDependency = descripAfterDepend;
-};
+
 
 
 // string Space::getSpaceType() {

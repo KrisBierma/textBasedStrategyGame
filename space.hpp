@@ -17,15 +17,15 @@ class Space {
     string spaceDescrption;
 
     // bool hasBackpack = false;
+    bool hasItem = false;
     string itemName;
     string itemNameForPrinting;
     string itemDescription;
     int itemActionNum;
-    bool hasItem;
     bool itemTaken = false;
+    string descriptionAfterItem;
 
-    // string afterActionDescription;
-
+    bool hasDependency = false;
     string spaceDependency;
     string descriptionAfterDependency;    
 
@@ -38,22 +38,15 @@ class Space {
     vector<Space*> pointerHolder;
 
   public:
-    // Space(string spaceNameIn, string itemNameIn, Space *north, Space *east, Space *south, Space *west, Space *up, Space *down);
-    // virtual ~Space() = 0;
     ~Space();
-    // void setData(string spaceNameIn, string itemNameIn, Space *northIn, Space *eastIn, Space *southIn, Space *westIn, Space *upIn, Space *downIn);
-    
-    // for groundFloor
-    // virtual void setData(string spaceNameIn, bool hasItem, string itemNameIn, int itemActionNumIn, Space *northIn, Space *eastIn, Space *southIn, Space *westIn);
-    // // for underground or aboveGround
-    // virtual void setData(string spaceNameIn, bool hasItem, string itemNameIn, int itemActionNumIn, Space *northIn, Space *eastIn, Space *southIn, Space *westIn, Space *upOrDownIn);
-    // // for stairs
-    // virtual void setData(string spaceNameIn, bool hasItem, string itemNameIn, int itemActionNumIn, Space *northIn, Space *eastIn, Space *southIn, Space *westIn, Space *upIn, Space *downIn);
+
+    void setDescriptions(string spaceNameIn, string printSpaceNameIn, string spaceDescrptionIn);
+
+    void setItem(bool hasItem, int itemActionNumIn, string itemNameIn, string printItemNameIn, string itemDescriptionIn, string descriptionAfterItem);
+
+    void setDependency(bool hasDependency, string spaceDepend, string descripAfterDepend);
 
 
-    // virtual void setData(string spaceNameIn, bool hasItem, string itemNameIn, int itemActionNumIn, Space *northIn, Space *eastIn, Space *southIn, Space *westIn);
-
-    void setDescriptions(string printSpaceNameIn, string printItemNameIn, string spaceDescrptionIn, string itemDescriptionIn, string spaceDepend, string descripAfterDepend);
     void setItemTaken(bool yesOrNo);
 
     vector<Space*> getSpacePointers();
@@ -63,6 +56,7 @@ class Space {
 
     bool hasSpaceDependency();
     string getSpaceDependency();
+    string getDescriptionAfterDependency();
 
     // bool getHasBackpack();
     string getItemName();
@@ -72,7 +66,8 @@ class Space {
     bool isItemTaken(); // a getter
     string getVerbForAction();
     string getItemDescription();
-    string getDescriptionAfterDependency();
+    string getDescriptionAfterItem();
+
 
     virtual string getSpaceType() = 0;
 };

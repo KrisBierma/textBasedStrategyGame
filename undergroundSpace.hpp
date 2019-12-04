@@ -14,7 +14,7 @@ class UndergroundSpace : public Space {
   public:
     UndergroundSpace();
     // ~UndergroundSpace();
-    void setData(string spaceNameIn, bool hasItem, string itemNameIn, int itemActionNumIn, Space *northIn, Space *eastIn, Space *southIn, Space *westIn, Space *upIn);
+    void setPointers(Space *northIn, Space *eastIn, Space *southIn, Space *westIn, Space *upIn);
 
     // void setUpPointer(Space *upSpaceIn);
 

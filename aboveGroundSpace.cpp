@@ -4,15 +4,11 @@
 
 #include "aboveGroundSpace.hpp"
 
-AboveGroundSpace::AboveGroundSpace() {};
+AboveGroundSpace::AboveGroundSpace(){};
 
 // AboveGroundSpace::~AboveGroundSpace() {};
 
-void AboveGroundSpace::setData(string spaceNameIn, bool hasItemIn, string itemNameIn, int itemActionNumIn, Space *northIn, Space *eastIn, Space *southIn, Space *westIn, Space *downIn) {
-  spaceName = spaceNameIn;
-  hasItem = hasItemIn;
-  itemName = itemNameIn;
-  itemActionNum = itemActionNumIn;
+void AboveGroundSpace::setPointers(Space *northIn, Space *eastIn, Space *southIn, Space *westIn, Space *downIn) {
   north = northIn;
   east = eastIn;
   south = southIn;

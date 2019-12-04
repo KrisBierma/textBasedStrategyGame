@@ -10,11 +10,7 @@ StairsSpace::StairsSpace() {};
 
 // StairsSpace::~StairsSpace() {};
 
-void StairsSpace::setData(string spaceNameIn, bool hasItemIn, string itemNameIn, int itemActionNumIn, Space *northIn, Space *eastIn, Space *southIn, Space *westIn, Space *upIn, Space *downIn) {
-  spaceName = spaceNameIn;
-  hasItem = hasItemIn;
-  itemName = itemNameIn;
-  itemActionNum = itemActionNumIn;
+void StairsSpace::setPointers(Space *northIn, Space *eastIn, Space *southIn, Space *westIn, Space *upIn, Space *downIn) {
   north = northIn;
   east = eastIn;
   south = southIn;

@@ -5,11 +5,7 @@ GndLvlSpace::GndLvlSpace() {};
 
 // GndLvlSpace::~GndLvlSpace() {};
 
-void GndLvlSpace::setData(string spaceNameIn, bool hasItemIn, string itemNameIn, int itemActionNumIn, Space *northIn, Space *eastIn, Space *southIn, Space *westIn) {
-  spaceName = spaceNameIn;
-  hasItem = hasItemIn;
-  itemName = itemNameIn;
-  itemActionNum = itemActionNumIn;
+void GndLvlSpace::setPointers(Space *northIn, Space *eastIn, Space *southIn, Space *westIn) {
   north = northIn;
   east = eastIn;
   south = southIn;

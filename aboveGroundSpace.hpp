@@ -13,7 +13,7 @@ class AboveGroundSpace : public Space {
   public:
     AboveGroundSpace();
     // ~AboveGroundSpace();
-    void setData(string spaceNameIn, bool hasItem, string itemNameIn, int itemActionNumIn, Space *northIn, Space *eastIn, Space *southIn, Space *westIn, Space *downIn);
+    void setPointers(Space *northIn, Space *eastIn, Space *southIn, Space *westIn, Space *downIn);
 
     void setDownPointer(Space *downSpaceIn);
 

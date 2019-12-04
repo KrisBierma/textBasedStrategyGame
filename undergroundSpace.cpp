@@ -6,11 +6,7 @@ UndergroundSpace::UndergroundSpace() {};
 
 // UndergroundSpace::~UndergroundSpace() {};
 
-void UndergroundSpace::setData(string spaceNameIn, bool hasItemIn, string itemNameIn, int itemActionNumIn, Space *northIn, Space *eastIn, Space *southIn, Space *westIn, Space *upIn) {
-  spaceName = spaceNameIn;
-  hasItem = hasItemIn;
-  itemName = itemNameIn;
-  itemActionNum = itemActionNumIn;
+void UndergroundSpace::setPointers(Space *northIn, Space *eastIn, Space *southIn, Space *westIn, Space *upIn) {
   north = northIn;
   east = eastIn;
   south = southIn;

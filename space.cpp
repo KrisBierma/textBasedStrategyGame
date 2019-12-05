@@ -11,6 +11,8 @@ Space::Space(string spaceNameIn, string printSpaceNameIn, string spaceDescrption
   spaceNameForPrinting = printSpaceNameIn;
   spaceDescrption = spaceDescrptionIn;
   spaceName = spaceNameIn;
+  hasPtrDependency = false;
+  hasDependency = false;
 };
 
 Space::~Space() {
@@ -57,6 +59,16 @@ bool Space::hasSpaceDependency() {
   return hasDependency;
 }
 
+// void Space::setItemDependFullfilled() {
+//   // itemDependencyFulfilled = !itemDependencyFulfilled;
+// };
+
+// bool Space::isItemDependFullfilled() {
+//   // return itemDependencyFulfilled;
+//   // spaceDependency->
+// };
+
+
 Item* Space::getItem() {
   return item;
 }
@@ -100,6 +112,13 @@ void Space::setItemTaken(bool yesOrNo) {
   itemTaken = yesOrNo;
 }
 
+void Space::setItemDepenDone() {
+  itemDepenDone = !itemDepenDone;
+};
+
+bool Space::getItemDepenDone() {
+  return itemDepenDone;
+}
 
 
 

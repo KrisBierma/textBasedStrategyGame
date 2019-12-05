@@ -14,7 +14,7 @@ Item::Item(int actionIn, string nameIn, string printNameIn, string descripIn, st
   // originalSpace = originalSpIn;
   description  = descripIn;
   descrtptionAfterUsed = descriptAfterIn;
-  dependency = dependencyIn;
+  // dependency = dependencyIn;
   descriptionAfterDepen = descripAfterDepIn;
 };
 
@@ -58,10 +58,13 @@ switch (actionNum) {
       return "Read";
       break;
     case 7:
-      return "Loop at";
+      return "Look at";
       break;
     case 8:
-      return "It's a mess";
+      return "Sit on";
+      break;
+    case 9:
+      return "Unlock";
       break;
   }
   return "not here";
@@ -76,6 +79,7 @@ string Item::getDescriptionAfterItem() {
 };
 
 string Item::getDescriptionAfterDependency() {
+  // cout << "in getdescafterdep "<<descriptionAfterDepen<<endl<<"  ------\n";
   return descriptionAfterDepen;
 };
 

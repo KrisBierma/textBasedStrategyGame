@@ -3,6 +3,7 @@
 #include <map>
 #include <vector>
 using std::vector;
+using std::map;
 
 #ifndef kbierma_game_hpp
 #define kbierma_game_hpp
@@ -10,7 +11,7 @@ using std::vector;
 class Game {
   private:
     // string name = "The Secret Treasure";
-    int totolRounds = 36;
+    int totalRounds = 36;
     int currentRoundNum = 1;
 
     bool hasBackpack = false;
@@ -23,6 +24,7 @@ class Game {
 
     // possible menu options:
     bool move = false;
+    bool takeItem = false;
     bool pickUpDroppedItem = false;
     bool openBackpack = false;
     bool dropItem = false;
@@ -60,11 +62,13 @@ class Game {
     bool getUseItem();
     bool getQuit();
 
-    bool setHasBackpack();
+    void setHasBackpack();
 
     void updateRoundNum();
     void showNewRound(Space *currentSpace);
     void displayRoundMenu(Space *currentSpaced, vector<string> backpack, map<string, string> &droppedItemsMap);
+
+    void gameOver();
 };
 
 #endif

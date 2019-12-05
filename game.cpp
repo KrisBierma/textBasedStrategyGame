@@ -29,7 +29,7 @@ Game::~Game() {
 };
 
 int Game::getTotalRounds() {
-  return totolRounds;
+  return totalRounds;
 }
 
 int Game::getCurrentRoundNum() {
@@ -40,19 +40,20 @@ void Game::displayIntro() {
   // display title, opening description, and directions
   cout << "\nThe Secret Treasure\n\n";
   cout << "long intro\n\n";
-  cout << "Directions: You have " << totolRounds << " hours to find the key. An hour is equal to a move from one space to another. Hope you win!\n";
+  cout << "Directions: You have " << totalRounds << " hours to find the key. An hour is equal to a move from one space to another. Hope you win!\n";
 }
 
 // display numRounds
 void Game::showNewRound(Space *currentSpace) {
   string stars = "*******";
-  cout << endl << stars << " Round " << currentRoundNum << "/" << totolRounds;
+  cout << endl << stars << " Round " << currentRoundNum << "/" << totalRounds;
   cout << "  " << makeCaptial(currentSpace->getSpaceNameForPrinting());
   cout  << " " << stars << endl;  
 }
 
 void Game::updateRoundNum() {
   currentRoundNum++;
+  // cout <<"in roundNum\n";
 };
 
 int Game::getUserChoiceForThisSpace() {
@@ -83,12 +84,13 @@ bool Game::getHasBackpack() {
   return hasBackpack;
 }
 
-bool Game::setHasBackpack() {
+void Game::setHasBackpack() {
   hasBackpack = true;
 };
 
 
 void Game::resetOptions() {
+  currentMenuNum = 1;
   move = false;
   pickUpDroppedItem = false;
   openBackpack = false;
@@ -99,7 +101,7 @@ void Game::resetOptions() {
   pickUpDroppedItemNum = -1;
   dropItemNum = -1;
   nameOfDroppedItem = "";
-  useItemNum = -1;  
+  useItemNum = -1;
 };
 
 bool Game::getMove() {
@@ -132,7 +134,6 @@ void Game::displayRoundMenu(Space *currentSpace, vector<string> backpack, map<st
 
   // create menu
   vector<string> spaceMenuChoices;
-  // int currentMenuNum = 1;
 
   string choice;
   // get possible spaces to move to
@@ -142,19 +143,33 @@ void Game::displayRoundMenu(Space *currentSpace, vector<string> backpack, map<st
 
   // add "go to" options to menu
   // if there's a ptr depend and it's not toggled on, don't add that pointer to menu
-  if (s->getHasPointerDependency) {
+  // cout <<"beforedep\n";
+  if (s->getHasPointerDependency()) {
     Item *itemP = s->getItemPtrDependentOn();
+    // cout <<itemP<<endl;
+      // cout <<" in beforedep\n";
+      // bool x = static_cast<ItemToggle*>(itemP)->getOn();
+      // cout << "x: " <<x <<endl;
+// cout <<static_cast<ItemToggle*>(itemP)->getOn()<<endl;
+// cout <<!static_cast<ItemToggle*>(itemP)->getOn()<<endl;
+
     if (!static_cast<ItemToggle*>(itemP)->getOn()) {
       // find this space ptr in tempHolder
+      // cout <<"in if\n";
       for (int k = 0; k < tempHolder.size(); k++) {
+        // cout <<k<<endl;
         if (tempHolder[k] == s->getSpacePtrDepend()) {
           // remove ptr from tempHolder
+          // cout <<"in erase  k: "<<k<<endl;
           tempHolder.erase(tempHolder.begin()+k);
+// cout <<"after\n";
         }
       }
       numPossibleMoves = tempHolder.size();
     }
   }
+  // cout << "\nsize: "<<tempHolder.size() <<endl;
+
   for (unsigned j = 0; j < tempHolder.size(); j++) {
     // if (tempHolder[j])
     choice = "" + toString(j+1) + ": Go to ";
@@ -163,14 +178,42 @@ void Game::displayRoundMenu(Space *currentSpace, vector<string> backpack, map<st
     currentMenuNum++;
   }
 
-
+// cout <<"there\n";
   // add items to menu
-  int numForItem;
   map<int,string> droppedItemsMenuNums;
+
+
+  // add items if the space has one and it's not already taken
+  bool addItemIf = s->getHasItem() && !s->isItemTaken();
   // add backpack to menu if the currentSpace is house
-  // add current space's item to menu if there is one and it's still in it's original location and the user has a backpack and the current room's dependency is True
-  // add items that have been dropped in currentSpace
-  if ((s->getHasItem() && !s->isItemTaken() && hasBackpack && !s->hasSpaceDependency())  || (s->getSpaceName() == "house" && !s->isItemTaken())) {
+  // bool addBackpackToMenu = s->getSpaceName() == "house" && !s->isItemTaken();
+  bool addBackpack = s->getSpaceName() == "house";
+  // add current space's item to menu if there is one and it's still in it's original location and the user has a backpack and the current room's dependency is True (or is it false???????)
+  bool addItem = hasBackpack && !s->hasSpaceDependency();
+  // add item if the space's depend is flashlight and it's on
+  bool addFlashlight = s->hasSpaceDependency() && (s->getSpaceDependency()->getItemName() == "flashlight") && static_cast<ItemToggle*>(s->getSpaceDependency())->getOn();
+  // bool addItem2 = hasBackpack;
+  // add item if dependency is done, ex: show key if crackers given to parrot
+  bool addItemAfterDepen = s->hasSpaceDependency() && s->getItemDepenDone();
+// cout << "\nadditemafterdepn: "<< addItemAfterDepen <<endl;
+// if (s->getHasItem()) {
+// cout <<s->getItem()->getItemNameForPrinting()<<endl;
+
+// }
+  // add item if 
+// cout << endl<<s->getHasItem()<<endl;
+// if (s->getHasItem()) {
+//   cout << s->isItemTaken()<<endl;
+// }
+// cout << s->hasSpaceDependency()<<endl;
+// if (s->hasSpaceDependency()) {
+//   cout <<"in if\n";
+//   cout << (s->getSpaceDependency()->getItemName() == "flashlight")<<endl;
+//   cout << (static_cast<ItemToggle*>(s->getSpaceDependency())->getOn())<<endl;
+// }
+
+  if (addItemIf && (addBackpack || addItem || addFlashlight || addItemAfterDepen)) {
+  // if (addBackpackToMenu || addItem || addItemFlash || addItem2) {
     choice = toString(currentMenuNum) + ": ";
     choice += s->getItem()->getVerbForAction() + " ";
     choice += s->getItem()->getItemNameForPrinting();
@@ -183,9 +226,9 @@ void Game::displayRoundMenu(Space *currentSpace, vector<string> backpack, map<st
     // if no item available
     numForItem = -1;
   }
+// cout <<"numForItem\n";
 
-
-  // add dropped items to menu
+  // add items that have been dropped in currentSpace
   if (hasBackpack && !droppedItemsMap.empty()) {
     // go through droppedItems map and find the ones dropped in current space, add them to the menu
     map<string, string>::iterator itr;
@@ -201,7 +244,7 @@ void Game::displayRoundMenu(Space *currentSpace, vector<string> backpack, map<st
     }    
   }
 
-
+// cout <<"hasBack\n";
   // add openBackpack, dropItem, and useItem to menu choices
   // int openBackpackNum = -1, dropItemNum = -1, useItemNum = -1;
   // string nameOfDroppedItem;
@@ -239,7 +282,7 @@ void Game::displayRoundMenu(Space *currentSpace, vector<string> backpack, map<st
   // display menu, get user's choice
   cout << endl << endl;
   int userChoice = roundMenu.getUserChoice();
-  cout << endl;
+  // cout << endl;
 
   // cout <<"userChoice: "<<userChoice<<endl;
 
@@ -247,6 +290,12 @@ void Game::displayRoundMenu(Space *currentSpace, vector<string> backpack, map<st
     move = true;
     // find the user's choice in the currentSpace's spacePointers
     moveWhere = tempHolder[userChoice-1];
+  }
+  else if (userChoice == numForItem) {
+    takeItem = true;
+    if (s->getItem()->getItemName() == "backpack") {
+      hasBackpack = true;
+    }
   }
   else if (userChoice == openBackpackNum) {
     // cout <<"openback=tru\n";
@@ -274,3 +323,7 @@ void Game::displayRoundMenu(Space *currentSpace, vector<string> backpack, map<st
 
   userChoiceForThisSpace = userChoice;
 };
+
+void Game::gameOver() {
+  cout << "Game over" << endl;
+}

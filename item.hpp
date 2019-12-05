@@ -14,7 +14,7 @@ class Item {
     // string originalSpace;
     string description;
     string descrtptionAfterUsed;
-    bool dependency = false;
+    // bool dependency = false;
 
     string descriptionAfterDepen;
 

@@ -23,6 +23,7 @@ class Space {
 
     bool hasDependency = false;
     Item *spaceDependency;
+    bool itemDepenDone = false;
     // string spaceDependency;
     // string descriptionAfterDependency;    
 
@@ -59,6 +60,9 @@ class Space {
 
     bool hasSpaceDependency();
     Item* getSpaceDependency();
+    void setItemDepenDone();
+    bool getItemDepenDone();
+    // bool isItemDependFullfilled();//getter
     // string getDescriptionAfterDependency();
 
     bool getHasPointerDependency();

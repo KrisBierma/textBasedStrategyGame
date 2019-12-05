@@ -22,10 +22,10 @@ class Menu {
     int menuSize;
     vector<string> menuChoices;
     vector<int> menuInput;
+    void getMenu();
   public:
     Menu(vector<string> &vectorChoices, vector<int> &menuInput);
     ~Menu();
-    void getMenu();
     int getUserChoice();
 };
 

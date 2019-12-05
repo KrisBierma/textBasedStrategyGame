@@ -24,7 +24,9 @@ ItemToggle::ItemToggle(int actionIn, string nameIn, string printNameIn, string d
 
 // toggle
 void ItemToggle::setOn() {
+  // cout << "on: " <<on;
   on = !on;
+  // cout << "  on: "<<on <<endl;
 }; 
 
 bool ItemToggle::getOn() {

@@ -15,7 +15,8 @@ class Space {
   protected:
     string spaceName;
     string spaceNameForPrinting;
-    string spaceDescrption;
+    string spaceDescription;
+    string spaceDescriptionAfterDependency;
 
     bool hasItem = false;
     Item *item;
@@ -40,7 +41,7 @@ class Space {
     vector<Space*> pointerHolder;
 
   public:
-    Space(string spaceNameIn, string printSpaceNameIn, string spaceDescrptionIn);
+    Space(string spaceNameIn, string printSpaceNameIn, string spaceDescriptionIn, string spaceDescriptionAfterDependencyIn);
     ~Space();
 
     // void setDescriptions();
@@ -57,6 +58,7 @@ class Space {
     string getSpaceName();
     string getSpaceNameForPrinting();
     string getSpaceDescription();
+    string getSpaceDescriptAftDepend();
 
     bool hasSpaceDependency();
     Item* getSpaceDependency();

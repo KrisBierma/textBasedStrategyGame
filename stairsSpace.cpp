@@ -6,7 +6,7 @@
 
 #include "stairsSpace.hpp"
 
-StairsSpace::StairsSpace(string spaceNameIn, string printSpaceNameIn, string spaceDescrptionIn) : Space(spaceNameIn, printSpaceNameIn, spaceDescrptionIn) {};
+StairsSpace::StairsSpace(string spaceNameIn, string printSpaceNameIn, string spaceDescrptionIn, string spaceDescriptionAfterDependencyIn) : Space(spaceNameIn, printSpaceNameIn, spaceDescrptionIn, spaceDescriptionAfterDependencyIn) {};
 
 
 // StairsSpace::~StairsSpace() {};
@@ -45,9 +45,13 @@ void StairsSpace::setPointers(Space *northIn, Space *eastIn, Space *southIn, Spa
 // };
 
 
-void StairsSpace::setLocation(string locationIn) {
+void StairsSpace::setLocation(int locationIn) {
   location = locationIn;
 };
+
+int StairsSpace::getLocation() {
+  return location;
+}
 
 
 string StairsSpace::getSpaceType() {

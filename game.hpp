@@ -11,8 +11,9 @@ using std::map;
 class Game {
   private:
     // string name = "The Secret Treasure";
-    int totalRounds = 36;
+    int totalRounds = 48;
     int currentRoundNum = 1;
+    // bool ranOutOfTime = false;
 
     bool hasBackpack = false;
 
@@ -62,12 +63,11 @@ class Game {
     bool getUseItem();
     bool getQuit();
 
-    void setHasBackpack();
-
     void updateRoundNum();
     void showNewRound(Space *currentSpace);
     void displayRoundMenu(Space *currentSpaced, vector<string> backpack, map<string, string> &droppedItemsMap);
 
+    void displayRanOutOfTime();
     void gameOver();
 };
 

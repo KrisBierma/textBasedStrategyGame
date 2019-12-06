@@ -16,15 +16,16 @@ class StairsSpace : public Space {
     Space *up;
     Space *down;
     // upOrDown location; ????
-    string location; // "up" "down"
+    int location; // 0=aboveGround, 1=underground
   public:
-    StairsSpace(string spaceNameIn, string printSpaceNameIn, string spaceDescrptionIn);
+    StairsSpace(string spaceNameIn, string printSpaceNameIn, string spaceDescrptionIn, string spaceDescriptionAfterDependencyIn);
     // ~StairsSpace();
     void setPointers(Space *northIn, Space *eastIn, Space *southIn, Space *westIn, Space *upIn, Space *downIn);
 
     // void setDownPointer(Space *downSpaceIn);
     // void location(upOrDown locationIn);
-    void setLocation(string locationIn);
+    void setLocation(int locationIn);
+    int getLocation();
 
     virtual string getSpaceType();
 };

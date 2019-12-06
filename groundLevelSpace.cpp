@@ -2,7 +2,7 @@
 #include "groundLevelSpace.hpp"
 #include "space.hpp"
 
-GndLvlSpace::GndLvlSpace(string spaceNameIn, string printSpaceNameIn, string spaceDescrptionIn) : Space(spaceNameIn, printSpaceNameIn, spaceDescrptionIn) {};
+GndLvlSpace::GndLvlSpace(string spaceNameIn, string printSpaceNameIn, string spaceDescrptionIn, string spaceDescriptionAfterDependencyIn) : Space(spaceNameIn, printSpaceNameIn, spaceDescrptionIn, spaceDescriptionAfterDependencyIn) {};
 
 // GndLvlSpace::~GndLvlSpace() {};
 
@@ -28,5 +28,5 @@ void GndLvlSpace::setPointers(Space *northIn, Space *eastIn, Space *southIn, Spa
 };
 
 string GndLvlSpace::getSpaceType() {
-  return "ground floor";
+  return "groundFloor";
 };

@@ -12,7 +12,7 @@ class UndergroundSpace : public Space {
   private:
     Space *up;
   public:
-    UndergroundSpace(string spaceNameIn, string printSpaceNameIn, string spaceDescrptionIn);
+    UndergroundSpace(string spaceNameIn, string printSpaceNameIn, string spaceDescrptionIn, string spaceDescriptionAfterDependencyIn);
 
     // UndergroundSpace();
     // ~UndergroundSpace();

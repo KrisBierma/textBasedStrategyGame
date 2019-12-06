@@ -2,7 +2,7 @@
 
 #include "undergroundSpace.hpp"
 
-UndergroundSpace::UndergroundSpace(string spaceNameIn, string printSpaceNameIn, string spaceDescrptionIn) : Space(spaceNameIn, printSpaceNameIn, spaceDescrptionIn) {};
+UndergroundSpace::UndergroundSpace(string spaceNameIn, string printSpaceNameIn, string spaceDescrptionIn, string spaceDescriptionAfterDependencyIn) : Space(spaceNameIn, printSpaceNameIn, spaceDescrptionIn, spaceDescriptionAfterDependencyIn) {};
 
 
 // UndergroundSpace::UndergroundSpace() {};

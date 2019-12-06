@@ -7,9 +7,10 @@ using std::vector;
 using std::cout;// de
 using std::endl;// de
 
-Space::Space(string spaceNameIn, string printSpaceNameIn, string spaceDescrptionIn) {
+Space::Space(string spaceNameIn, string printSpaceNameIn, string spaceDescriptionIn, string spaceDescriptionAfterDependencyIn) {
   spaceNameForPrinting = printSpaceNameIn;
-  spaceDescrption = spaceDescrptionIn;
+  spaceDescription = spaceDescriptionIn;
+  spaceDescriptionAfterDependency = spaceDescriptionAfterDependencyIn;
   spaceName = spaceNameIn;
   hasPtrDependency = false;
   hasDependency = false;
@@ -59,23 +60,17 @@ bool Space::hasSpaceDependency() {
   return hasDependency;
 }
 
-// void Space::setItemDependFullfilled() {
-//   // itemDependencyFulfilled = !itemDependencyFulfilled;
-// };
-
-// bool Space::isItemDependFullfilled() {
-//   // return itemDependencyFulfilled;
-//   // spaceDependency->
-// };
-
-
 Item* Space::getItem() {
   return item;
 }
 
 string Space::getSpaceDescription() {
-  return spaceDescrption;
+  return spaceDescription;
 };
+
+string Space::getSpaceDescriptAftDepend() {
+  return spaceDescriptionAfterDependency;
+}
 
 Item* Space::getSpaceDependency() {
   return spaceDependency;
@@ -93,20 +88,10 @@ Item* Space::getItemPtrDependentOn() {
   return itemItsDependentOn;
 };
 
-
-// bool Space::hasSpaceDependency() {
-//   if (spaceDependency == "") {
-//     return false;
-//   }
-//   return true;
-// }
-
-
 // if item not in original space
 bool Space::isItemTaken() {
   return itemTaken; // a getter
 }
-
 
 void Space::setItemTaken(bool yesOrNo) {
   itemTaken = yesOrNo;

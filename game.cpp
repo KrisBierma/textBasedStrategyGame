@@ -1,34 +1,33 @@
-
-
+/********************************************************************
+** Program name:The Secret Treasure, A Text-Based Game (Project 5)
+** Author:    	Kris Bierma
+** Date:	      12/6/19
+** Description:	Game class holds information for game play, creates the
+**              menu for each round, and displays game intro, round and
+**              end game information.
+********************************************************************/
 #include <iostream>
 #include <sstream>
 #include <vector>
 #include <map>
-// #include "displayRoundMenu.hpp"
+#include "game.hpp"
 #include "menu.hpp"
 #include "space.hpp"
-#include "game.hpp"
-#include "stairsSpace.hpp"
 #include "helpers.hpp"
 #include "itemToggle.hpp"
-//whre is itemLight.hpp ?????
-
+#include "stairsSpace.hpp"
 using std::cin;
 using std::cout;
 using std::endl;
 using std::map;
-using std::string;
 using std::pair;
+using std::string;
 using std::vector;
 
-Game::Game() {
 
-};
-
-Game::~Game() {
-
-};
-
+/********************************************************************
+ * Getters and setters for the rounds
+********************************************************************/
 int Game::getTotalRounds() {
   return totalRounds;
 }
@@ -37,40 +36,17 @@ int Game::getCurrentRoundNum() {
   return currentRoundNum;
 }
 
-void Game::displayIntro() {
-  // display title, opening description, and directions
-  cout << "\nThe Secret Treasure\n\n";
-  cout << "long intro\n\n";
-  cout << "Directions: You have " << totalRounds << " hours to find the key. An hour is equal to a move from one space to another. Hope you win!\n";
-}
-
-// display numRounds
-void Game::showNewRound(Space *currentSpace) {
-  string stars = "*******";
-  cout << endl << stars << " Round " << currentRoundNum << "/" << totalRounds;
-  cout << "  " << makeCaptial(currentSpace->getSpaceNameForPrinting());
-  cout  << " " << stars << endl;     
-}
-
-void Game::displayRanOutOfTime() {
-  cout << "!You've run out of time! The treasure has been found by your cousin. You wonder what it was.\n\n";
-};
-
 void Game::updateRoundNum() {
   currentRoundNum++;
 };
 
+
+/********************************************************************
+ * Getters and setters for menu relaying user choice to main.cpp
+********************************************************************/
 int Game::getUserChoiceForThisSpace() {
   return userChoiceForThisSpace;
 };
-
-int Game::getCurrentMenuNum() {
-  return currentMenuNum;
-}
-
-int Game::getNumPossibleMoves() {
-  return numPossibleMoves;
-}
 
 Space* Game::getMoveWhere() {
   return moveWhere;
@@ -82,30 +58,6 @@ string Game::getNameOfDroppedItem() {
 
 int Game::getNumForItem() {
   return numForItem;
-};
-
-bool Game::getHasBackpack() {
-  return hasBackpack;
-}
-
-// void Game::setHasBackpack() {
-//   hasBackpack = true;
-// };
-
-
-void Game::resetOptions() {
-  currentMenuNum = 1;
-  move = false;
-  pickUpDroppedItem = false;
-  openBackpack = false;
-  dropItem = false;
-  useItem = false;
-  quit = false;
-  openBackpackNum = -1;
-  pickUpDroppedItemNum = -1;
-  dropItemNum = -1;
-  nameOfDroppedItem = "";
-  useItemNum = -1;
 };
 
 bool Game::getMove() {
@@ -133,6 +85,85 @@ bool Game::getQuit() {
 };
 
 
+/********************************************************************
+ * Getters and setters for game play
+********************************************************************/
+bool Game::getHasBackpack() {
+  return hasBackpack;
+}
+
+
+/********************************************
+ ** Function:     displayIntro
+ ** Description:  displays title, opening description, and directions
+ ** Parameters:   none 
+ ** Pre-Conditions:   none
+ ** Post-Conditions:  Displays intro
+ ********************************************/
+void Game::displayIntro() {
+  cout << "\nThe Secret Treasure\n\n";
+  cout << "Your wealthy uncle has died, and his enigmatic will says something about a key and his greatest treasure. The lawyer looks over his glasses at the ten of you, \"You know he liked a good challenge. He's given you 48 hours to find the key and the hidden treasure. If one of you hasn't, the treasure will be forfeit and given to charity.\"\n\nEveryone walks out of the mansion in shock (he was a great guy and he was very wealthy) and into the bright sunshine. The words \"key\" and \"greatest treasure\" are ringing through everyone's mind and, without a word, everyone scatters in different directions.\n\n";
+  cout << "Directions: You have " << totalRounds << " hours to find the key. An hour is equal to a move from one space to another. Hope you win!\n\n";
+  
+  cout << "Press the Enter key to continue...";
+  cin.get();
+}
+
+
+/********************************************
+ ** Function:     showNewRound
+ ** Description:  Shows a header at the start of each round
+ **               with the round #, total possible rounds
+ **               and space's name
+ ** Parameters:   Pointer to the player's current space object
+ ** Pre-Conditions:   none
+ ** Post-Conditions:  Displays round header info
+ ********************************************/
+void Game::showNewRound(Space *currentSpace) {
+  string stars = "*******";
+  cout << endl << stars << " Round " << currentRoundNum << "/" << totalRounds;
+  cout << "  " << makeCaptial(currentSpace->getSpaceNameForPrinting());
+  cout  << " " << stars << endl;     
+}
+
+
+/********************************************
+ ** Function:     resetOptions
+ ** Description:  Resets variables for displaying menu
+ **               and relaying user's choice back to main.cpp
+ ** Parameters:   none
+ ** Pre-Conditions:   none
+ ** Post-Conditions:  resets menu variables
+ ********************************************/
+// reset for each round
+void Game::resetOptions() {
+  currentMenuNum = 1;
+  move = false;
+  pickUpDroppedItem = false;
+  openBackpack = false;
+  dropItem = false;
+  useItem = false;
+  quit = false;
+  openBackpackNum = -1;
+  pickUpDroppedItemNum = -1;
+  dropItemNum = -1;
+  nameOfDroppedItem = "";
+  useItemNum = -1;
+};
+
+
+/********************************************
+ ** Function:     displayRoundMenu
+ ** Description:  Creates the menu for each round depending on input from main.cpp
+ **               Includes spaces to move to, items to use, drop or see.
+ **               Gets the user's choice and feeds back to main.
+ ** Parameters:   Space pointer of current location of player,
+ **               vector of items in the backpack, reference
+ **               to map holding items dropped and where they
+ **               were dropped
+ ** Pre-Conditions:   none
+ ** Post-Conditions:  
+ ********************************************/
 void Game::displayRoundMenu(Space *currentSpace, vector<string> backpack, map<string, string> &droppedItemsMap) {
   resetOptions();
 
@@ -150,17 +181,11 @@ void Game::displayRoundMenu(Space *currentSpace, vector<string> backpack, map<st
   if (s->getHasPointerDependency()) {
     Item *itemP = s->getItemPtrDependentOn();
 
-cout <<"tempHol: \n";
-// for (int m=0;m<tempHolder)
-
     if (!static_cast<ItemToggle*>(itemP)->getOn()) {
       // find this space ptr in tempHolder
       for (unsigned k = 0; k < tempHolder.size(); k++) {
-        cout <<tempHolder[k]->getSpaceName()<<"    ";
         if (tempHolder[k] == s->getSpacePtrDepend()) {
           // remove ptr from tempHolder
-         cout <<"erasing: "<<tempHolder[k]->getSpaceName()<<endl;
-
           tempHolder.erase(tempHolder.begin()+k);
         }
       }
@@ -168,9 +193,14 @@ cout <<"tempHol: \n";
     }
   }
 
+  // add option to move to spaces linked to current space
   string preposition = "";
-  // loc = stairsLocation: 0=aboveGround, 1=underground
-  int loc = static_cast<StairsSpace*>(s)->getLocation();
+  int loc = -1;
+  if (s->getSpaceType() == "stairs") {
+    // loc = stairsLocation: 0=underground, 1=aboveGround
+    loc = static_cast<StairsSpace*>(s)->getLocation();
+  };
+
   for (unsigned j = 0; j < tempHolder.size(); j++) {
     if (s->getSpaceType() == "stairs") {
       if ((loc == 0 && tempHolder[j]->getSpaceType() == "groundFloor") || (loc == 1 && tempHolder[j]->getSpaceType() == "aboveGround")) {
@@ -189,25 +219,21 @@ cout <<"tempHol: \n";
     currentMenuNum++;
   }
 
-  // add items to menu
+  // for holding dropped items to add to menu
   map<int,string> droppedItemsMenuNums;
-
 
   // add items if the space has one and it's not already taken
   bool addItemIf = s->getHasItem() && !s->isItemTaken();
   // add backpack to menu if the currentSpace is house
-  // bool addBackpackToMenu = s->getSpaceName() == "house" && !s->isItemTaken();
   bool addBackpack = s->getSpaceName() == "house";
   // add current space's item to menu if there is one and it's still in it's original location and the user has a backpack and the current room's dependency is false
   bool addItem = hasBackpack && !s->hasSpaceDependency();
   // add item if the space's depend is flashlight and it's on
   bool addFlashlight = s->hasSpaceDependency() && (s->getSpaceDependency()->getItemName() == "flashlight") && static_cast<ItemToggle*>(s->getSpaceDependency())->getOn();
-  // bool addItem2 = hasBackpack;
   // add item if dependency is done, ex: show key if crackers given to parrot
   bool addItemAfterDepen = s->hasSpaceDependency() && s->getItemDepenDone();
 
   if (addItemIf && (addBackpack || addItem || addFlashlight || addItemAfterDepen)) {
-  // if (addBackpackToMenu || addItem || addItemFlash || addItem2) {
     choice = toString(currentMenuNum) + ": ";
     choice += s->getItem()->getVerbForAction() + " ";
     choice += s->getItem()->getItemNameForPrinting();
@@ -238,8 +264,6 @@ cout <<"tempHol: \n";
   }
 
   // add openBackpack, dropItem, and useItem to menu choices
-  // int openBackpackNum = -1, dropItemNum = -1, useItemNum = -1;
-  // string nameOfDroppedItem;
   if (hasBackpack) {
     choice = toString(currentMenuNum) + ": Open backpack";
     spaceMenuChoices.push_back(choice);
@@ -257,12 +281,11 @@ cout <<"tempHol: \n";
     currentMenuNum++;
   }
 
-
   // add quit to menu choices
   choice = toString(currentMenuNum) + ": I quit";
   spaceMenuChoices.push_back(choice);
 
-
+  // to use in instantiating roundMenu
   vector<int> spaceMenuNums;
   for (unsigned k = 1; k < spaceMenuChoices.size()+1; k++) {
     spaceMenuNums.push_back(k);
@@ -272,11 +295,8 @@ cout <<"tempHol: \n";
   Menu roundMenu(spaceMenuChoices, spaceMenuNums);
 
   // display menu, get user's choice
-  // cout << endl;
   int userChoice = roundMenu.getUserChoice();
   cout << endl;
-
-  // cout <<"userChoice: "<<userChoice<<endl;
 
   if (userChoice >= 1 && userChoice <= numPossibleMoves) {
     move = true;
@@ -312,6 +332,28 @@ cout <<"tempHol: \n";
   userChoiceForThisSpace = userChoice;
 };
 
+
+/********************************************
+ ** Function:     displayRanOutOfTime
+ ** Description:  Display "out of turns" message
+ ** Parameters:   none
+ ** Pre-Conditions:   none
+ ** Post-Conditions:  Displays message
+ ********************************************/
+void Game::displayRanOutOfTime() {
+  cout << "It's been 48 hours and you ran out of time!\n\n";
+};
+
+
+/********************************************
+ ** Function:     gameOver
+ ** Description:  Displays game over
+ ** Parameters:   none
+ ** Pre-Conditions:   Game ends by win or running out of turns
+ ** Post-Conditions:  displays game over
+ ********************************************/
 void Game::gameOver() {
-  cout << "Game over" << endl;
+  string stars = "*******";
+  cout << stars << " Game over " << stars << endl << endl;
 }
+

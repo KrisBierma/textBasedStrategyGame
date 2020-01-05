@@ -1,4 +1,14 @@
-
+/********************************************************************
+** Program name:The Secret Treasure, A Text-Based Game (Project 5)
+** Author:    	Kris Bierma
+** Date:	      12/6/19
+** Description:	Item class is a base class (not abstract) with one class derived
+**              from it (ItemToggle). It is associated with a Space class.
+**              There are 15 items in the game that can be picked up, manipulated,
+**              and used to unlock spaces, other items, and ultimately win the game.
+**              It has functions to get its name, action, and descriptions, which
+**              are different depending on where in the game the player is.
+********************************************************************/
 #include <iostream>
 #include <string>
 using std::string;
@@ -11,34 +21,25 @@ class Item {
     string name;
     string printName;
     int actionNum;
-    // string originalSpace;
     string description;
     string descrtptionAfterUsed;
-    // bool dependency = false;
-
     string descriptionAfterDepen;
-
-    // bool itemTaken;
-
-    // bool used = false;
   public:
     Item(int actionIn, string nameIn, string printNameIn, string descripIn, string descriptAfterIn, string descripAfterDep);
     ~Item();
 
-    string getDescriptionAfterDependency();
+    // item name
     string getItemName();
     string getItemNameForPrinting();
-    int getItemActionNum();
 
-    // bool isItemTaken(); // a getter
+    // item action
+    int getItemActionNum();
     string getVerbForAction();
+    
+    // item descriptions depending on user interaction
     string getItemDescription();
     string getDescriptionAfterItem();
-
-    // void setItemTaken(bool yesOrNo);
-
-    // void setUsed(); // toggle
-    // bool getUsed();
+    string getDescriptionAfterDependency();
 };
 
 #endif

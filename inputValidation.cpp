@@ -1,7 +1,7 @@
 /********************************************************************
-** Program name:Animals in the Wild - Multi-level Survival (Project 4)
+** Program name:The Secret Treasure, A Text-Based Game (Project 5)
 ** Author:    	Kris Bierma
-** Date:	      11/19/19
+** Date:	      12/6/19
 ** Description:	Input validation includes a base function to validate user
 **              input for a valid integer (positive, negative or either). 
 **              Also validates for specific functions: int greater than 1

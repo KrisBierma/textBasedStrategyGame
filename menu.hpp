@@ -1,13 +1,12 @@
 /********************************************************************
-** Program name:Animals in the Wild - Multi-level Survival (Project 4)
+** Program name:The Secret Treasure, A Text-Based Game (Project 5)
 ** Author:    	Kris Bierma
-** Date:	      11/19/19
+** Date:	      12/6/19
 ** Description: Menu class creates reusable menus. It includes a constructor
 **		          to initialze the menu with the user's options, a function
 **		          to display the menu, a user-input validation function, and
 **              a destructor to free up vector memory.	
 ********************************************************************/
-
 #include <string>
 #include <vector>
 using std::vector;

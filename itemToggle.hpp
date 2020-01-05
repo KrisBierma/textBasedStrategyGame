@@ -1,4 +1,11 @@
-
+/********************************************************************
+** Program name:The Secret Treasure, A Text-Based Game (Project 5)
+** Author:    	Kris Bierma
+** Date:	      12/6/19
+** Description:	ItemToggle class is a derived class of Item.
+**              It has a getter and setter for the toggle and the 
+**              words that describe that (on/off, open/closed, in/out).
+********************************************************************/
 
 #include <iostream>
 #include <string>
@@ -16,9 +23,9 @@ class ItemToggle : public Item {
   public:
     ItemToggle(int actionIn, string nameIn, string printNameIn, string descripIn, string descriptAfterIn, string descripAfterDep);
 
-    // Toggle(string nameIn, string printNameIn, string actionIn, string originalSpIn, string descripIn, string descriptAfterIn, bool dependency);
     void setOn(); // toggle
     bool getOn();
+    void setWordsForOnOff(string onIn, string offIn);
     string getWordForItemOn();
     string getWordForItemOff();
 };

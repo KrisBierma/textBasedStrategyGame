@@ -1,4 +1,11 @@
-
+/********************************************************************
+** Program name:The Secret Treasure, A Text-Based Game (Project 5)
+** Author:    	Kris Bierma
+** Date:	      12/6/19
+** Description:	Game class holds information for game play, creates the
+**              menu for each round, and displays game intro, round and
+**              end game information.
+********************************************************************/
 #include "space.hpp"
 #include <map>
 #include <vector>
@@ -10,18 +17,17 @@ using std::map;
 
 class Game {
   private:
-    // string name = "The Secret Treasure";
     int totalRounds = 48;
     int currentRoundNum = 1;
-    // bool ranOutOfTime = false;
 
     bool hasBackpack = false;
 
-    // for menu
+    // for menu creation
     int currentMenuNum;
     int numForItem;
     int userChoiceForThisSpace;
     int numPossibleMoves; // updated getSpacePointers() in case one is removed for dependency not being met
+    Space *moveWhere;
 
     // possible menu options:
     bool move = false;
@@ -33,7 +39,7 @@ class Game {
     bool quit = false;
     void resetOptions();
 
-    Space *moveWhere;
+    // value for menu
     int openBackpackNum = -1;
     int pickUpDroppedItemNum = -1;
     int dropItemNum = -1;
@@ -41,15 +47,10 @@ class Game {
     int useItemNum = -1;
 
   public:
-    Game();
-    ~Game();
     void displayIntro();
-    // int getStartMenu();
     int getTotalRounds();
     int getCurrentRoundNum();
-    int getCurrentMenuNum();
     int getUserChoiceForThisSpace();
-    int getNumPossibleMoves();
     Space* getMoveWhere();
     string getNameOfDroppedItem();
     int getNumForItem();

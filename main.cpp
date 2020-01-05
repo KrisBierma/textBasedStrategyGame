@@ -1,15 +1,16 @@
 /********************************************************************
-** Program name:Animals in the Wild - Multi-level Survival (Project 4)
-** Author:    	Kris Bierma1
-** Date:	      11/19/19
-** Description:	Wild animals fighting simulation. Five different animals
-**              (elephant, bear, meerkats, spider and cat) have different
-**              attack, defense, armor and strenght abilities. The user
-**              chooses two animals, one is the attacker and one the 
-**              defender, and they go for rounds until one animal dies.
-**              The loser moves to the loser container (and leave their
-**              group's container) and the winner goes to the back of 
-**              their group's container.
+** Program name:The Secret Treasure, A Text-Based Game (Project 5)
+** Author:    	Kris Bierma
+** Date:	      12/8/19
+** Description:	A text-based game in which the player moves through
+**              spaces, looking for objects that unlock other spaces 
+**              and objects to find the treasure within a limited
+**              number of steps.
+**              It utilizes a Space class (with underground, above 
+**              ground, ground level, and stairs being derived) and 
+**              an Item class (with ItemToggle derived). The Spaces
+**              are linked with pointers and each space has an action
+**              for the player. There are 24 spaces and 15 items.
 ********************************************************************/
 #include <iostream>
 #include <cstdlib>
@@ -17,15 +18,14 @@
 #include <map>
 #include <vector>
 #include <sstream>
-// #include <tuple>
 #include "menu.hpp"
-#include "space.hpp"
 #include "game.hpp"
 #include "item.hpp"
+#include "space.hpp"
 #include "helpers.hpp"
 #include "itemToggle.hpp"
-#include "inputValidation.hpp"
 #include "stairsSpace.hpp"
+#include "inputValidation.hpp"
 #include "aboveGroundSpace.hpp"
 #include "undergroundSpace.hpp"
 #include "groundLevelSpace.hpp"
@@ -36,8 +36,6 @@ using std::cout;
 using std::endl;
 using std::vector;
 using std::string;
-// using std::tuple;
-// using std::remove_if;
 using std::stringstream;
 
 int chooseItemFromBackpack(vector<string> &backpack);
@@ -62,22 +60,22 @@ int main() {
     map<string, string> droppedItemsMap;
 
     // instantiate items
-      // remove idk
+      // remove 
       Item *lightSwitchP = new ItemToggle(2, "lightSwitch", "the light switch", "There's a light switch on the wall.", "You flip the switch and can see a door on the other side of the room. It leads to the train!", "There's also a power button.");
-      Item *powerButtonP = new ItemToggle(3, "powerButton", "the big, green power button", "", "Choo choo! The train goes around the property, passing the courtyard, a copse of trees and ending at the house.  As it stops you hear a rustling in the passenger car.", "idk");
+      Item *powerButtonP = new ItemToggle(3, "powerButton", "the big, green power button", "", "Choo choo! The train goes around the property, passing the courtyard, a copse of trees and ending at the house.  As it stops you hear a rustling in the passenger car.", "");
       Item *crackersP = new Item(1, "crackers", "the crackers", "Someone left a small package of crackers in one of them.", "You take the crackers in case you get hungry later.", "You put a cracker up to the wire. The parrot flies over and grabs the cracker. A key falls through the wire and lands at your feet.");
       Item *flashlightP = new ItemToggle(1, "flashlight", "the flashlight", "As you walk down the aisle you notice a flashlight in one of the pews.", "You grab it just in case.", "Good thing you found this flashlight.");
-      Item *doorP = new ItemToggle(4, "door", "the hidden door", "In the stone behind it, there's an outline of something like a door.", "You run your hand along the stone and something clicks. A door opens. It's dark inside.", "idk");
-      Item *pushPinP = new ItemToggle(1, "pushPin", "the push pin", "As you're nearing the end, the light glints off something on the floor.", "You pick up a push pin.", "idk");
+      Item *doorP = new ItemToggle(4, "door", "the hidden door", "In the stone behind it, there's an outline of something like a door.", "You run your hand along the stone and something clicks. A door opens. It's dark inside.", "");
+      Item *pushPinP = new ItemToggle(1, "pin", "the push pin", "As you're nearing the end, the light glints off something on the floor.", "You pick up a push pin.", "");
       Item *keyP = new ItemToggle(1, "key", "the key", "The parrots look like a snack would be welcome.", "You take the key.", "You put the key in the lock and it clicks open.");
-      Item *signP = new Item(6, "sign", "the sign", "There's a sign in front of them.", "Llamas are great pack animals, they're super smart and their fur is used to make all kinds of things. They're originally from South America. Hmm, interesting.", "idk");
-      Item *backpackP = new Item(1, "backpack", "your backpack", "Your backpack is sitting on a bench.", "You grab your backpack. It might come in handy.", "idk");
-      Item *flowersP = new Item(1, "flowers", "the flowers", "There are some pretty flowers along the path. They smell heavenly.", "Mmm. Smells nice. I wonder what you will you do with them.", "idk");
-      Item *displayCaseP = new Item(7, "", "a large glass display case", "There's a glass display case.", "Inside are signed first editions of C. S. Lewis's Chronicles of Narnia.", "idk");
+      Item *signP = new Item(6, "sign", "the sign", "There's a sign in front of them.", "Llamas are great pack animals, they're super smart and their fur is used to make all kinds of things. They're originally from South America. Hmm, interesting.", "");
+      Item *backpackP = new Item(1, "backpack", "your backpack", "Your backpack is sitting on a bench.", "You grab your backpack. It might come in handy.", "");
+      Item *flowersP = new Item(1, "flowers", "the flowers", "There are some pretty flowers along the path. They smell heavenly.", "Mmm. Smells nice. I wonder what you will you do with them.", "");
+      Item *displayCaseP = new Item(7, "", "a large glass display case", "There's a glass display case.", "Inside are signed first editions of C. S. Lewis's Chronicles of Narnia.", "");
       Item *paperP = new Item(1, "paper", "the piece of paper", "A piece of paper flutters to the floor.", "It has 912 written on it.", "The card says 912, which leads to the maps section. For some reason there's a map lying loose on top of the books.");
       Item *mapP = new Item(1, "map", "a map", "", "You take the map.", "The map fits in it perfectly. You notice small holes in different counties, as though someone stuck pins to mark places.");
       Item *binocularsP = new Item(1, "binoculars", "a pair of binoculars", "There are binoculars hanging on a peg.", "You never know when you'll need to see better.", "With the binoculars you see a tower. It looks like it's part of the library, but a part of it you've never been to nor noticed before. How do you get up there?");
-      Item *treasureP = new Item(4, "box", "the treasure box", "Sitting jauntily on a small round table is a treasure box!", "Inside the box is Uncle's first edition books with a note. \"These are yours now. They're worth a great deal. Do you keep them, knowing you possess a fortune in knowledge, or do you trade them in for their value in money?\"", "idk");
+      Item *treasureP = new Item(4, "box", "the treasure box", "Sitting jauntily on a small round table is a treasure box!", "Inside the box is a collection of your uncle's most valuable first edition books with a note.\n\n\"These are yours now. They're worth a great deal. Do you keep them, knowing you possess a fortune in knowledge, or do you trade them in for their value in money?\"", "");
       // actionIn, nameIn, printNameIn, descripIn, descriptAfterIn, descripAfterDepIn
 
     // instantiate spaces
@@ -128,7 +126,7 @@ int main() {
       static_cast<GndLvlSpace*>(libWindowP)->setPointers(nullptr, libStacksP, nullptr, nullptr);
       static_cast<GndLvlSpace*>(libStacksP)->setPointers(nullptr, libEntryP, nullptr, libWindowP);
       static_cast<UndergroundSpace*>(libBasementP)->setPointers(nullptr, nullptr, nullptr, nullptr, libOfficeP);  // goes up
-      static_cast<AboveGroundSpace*>(libMapRoomP)->setPointers(nullptr, nullptr, nullptr, libStairsP, libMapRmStairsP);//????
+      static_cast<AboveGroundSpace*>(libMapRoomP)->setPointers(nullptr, nullptr, nullptr, libStairsP, libMapRmStairsP);
       static_cast<StairsSpace*>(libMapRmStairsP)->setPointers(nullptr, nullptr, nullptr, nullptr, libSecretTowerP, libMapRoomP);
       static_cast<AboveGroundSpace*>(libSecretTowerP)->setPointers(nullptr, nullptr, nullptr, nullptr, libMapRmStairsP);
 
@@ -136,7 +134,7 @@ int main() {
     static_cast<StairsSpace*>(chapelStairsP)->setLocation(0);
     static_cast<StairsSpace*>(zooStairsP)->setLocation(0);
     static_cast<StairsSpace*>(libStairsP)->setLocation(1);
-    static_cast<StairsSpace*>(libMapRmStairsP)->setLocation(1);  
+    static_cast<StairsSpace*>(libMapRmStairsP)->setLocation(1);
 
     // set space items
       trainStationP->setItem(true, lightSwitchP);
@@ -151,11 +149,8 @@ int main() {
       treesP->setItem(true, flowersP);  
       libEntryP->setItem(true, displayCaseP);
       libOfficeP->setItem(true, paperP);
-      // libWindowP->setItem(true, binocularsP);
       libStacksP->setItem(true, mapP);
       libBasementP->setItem(true, binocularsP);
-      // libMapRoomP->setItem(true, );
-      // libMapRmStairsP->setItem(true, libDoorP);
       libSecretTowerP->setItem(true, treasureP);
 
     // set space pointer dependencies
@@ -165,7 +160,6 @@ int main() {
       chapelFrontP->setPtrDependency(true, chapelStairsP, doorP);
       libMapRoomP->setPtrDependency(true, libMapRmStairsP, pushPinP);
       libMapRmStairsP->setPtrDependency(true, libSecretTowerP, keyP);
-      // libSecretTowerP->setPtrDependency(true, libMapRmStairsP, libDoorP);
 
     // set item dependencies
       chapelStairsP->setDependency(true, flashlightP);
@@ -176,8 +170,7 @@ int main() {
       libWindowP->setDependency(true, binocularsP);
       libStacksP->setDependency(true, paperP);
       libMapRoomP->setDependency(true, mapP);
-      libMapRmStairsP->setDependency(true, keyP); // was uncommented
-      // libSecretTowerP->setDependency(true, keyP); //was commented out
+      libMapRmStairsP->setDependency(true, keyP);
 
     // push ALL space object pointers to container
       vector<Space*> spaceVector = {trainStationP, trainLocomotiveP, trainPassengerCarP, chapelPewsP, chapelFrontP, chapelStairsP, chapelSecretPassWP, chapelSecretPassEP, zooStairsP, zooEntryP, zooParrotsP, zooLlamasP, houseP, courtyardP, treesP, libEntryP, libOfficeP, libStairsP, libWindowP, libStacksP, libBasementP, libMapRoomP, libMapRmStairsP, libSecretTowerP};
@@ -209,7 +202,6 @@ int main() {
 
       // item description
       if ((sp->getHasItem() && sp->isItemTaken() == false) && sp->getItem()->getItemDescription() !="") {
-        // cout << "in here\n";
         cout << sp->getItem()->getItemDescription() << endl << endl;
       }
 
@@ -232,7 +224,6 @@ int main() {
             // search through spaceVector (from main) to find the space that matches the user's move choice
             for (auto i : spaceVector) {
               if (i->getSpaceName() == tempName) {
-                // cout << "I found it!\n";
 
                 bool hasFlashlightDep = i->hasSpaceDependency() && i->getSpaceDependency()->getItemName() == "flashlight";
                 bool hasOtherDep = i->hasSpaceDependency() && i->getSpaceDependency()->getItemName() != "flashlight";
@@ -263,7 +254,6 @@ int main() {
                       }
                     }
                   }
-                  // cout << "space Depen: "<< i->getSpaceDependency() << endl;
                   sp = i;
                   game.updateRoundNum();
                   endRound = true;
@@ -274,9 +264,8 @@ int main() {
 
           // display backpack
           else if (game.getOpenBackpack()) {
-            // cout <<"in printbackpack   size:"<<backpack.size()<<endl;
             if (backpack.empty()) {
-              cout << "Your backpack is empty." << endl;
+              cout << "Your backpack is empty." << endl << endl;
             }
             else {
               cout << "You've got: ";
@@ -303,7 +292,6 @@ int main() {
 
             // if last number, do nothing
             if (item < backpack.size()) {
-              // cout << backpack[item] << endl;
 
               // add to droppedItems container
               // key-item, value-current space
@@ -311,12 +299,6 @@ int main() {
 
               // remove from backpack
               backpack.erase(backpack.begin()+item);
-
-              // delete
-              // map<string, string>::iterator itr;
-              // for (itr = droppedItemsMap.begin(); itr != droppedItemsMap.end(); ++itr) {
-              //   cout << '\t' << itr->first << "\t" << itr->second << '\n';
-              // }
             }
           }
 
@@ -327,23 +309,18 @@ int main() {
             // get item to be used from user
             unsigned item = chooseItemFromBackpack(backpack);
             cout << endl;
-            cout << "item: "<<backpack[item]<<endl;
             string itemName = backpack[item];
 
             // "item<backpack.size" bc last number is "nevermind"
             if (item < backpack.size()) {
-              if (sp->hasSpaceDependency()) {
-                cout <<"sp-> "<< sp->getSpaceDependency()->getItemName()<<endl;
-              }
 
               // toggle key (dependency of towerRoom)
               if (itemName == "key") {
-                cout << "toggle key on\n";
                 static_cast<ItemToggle*>(keyP)->setOn();
               }
 
               // add pin to map in map room
-              if(sp->getSpaceName() == "libMapRoom" && sp->getItemDepenDone() && itemName == "pushPin") {
+              if(sp->getSpaceName() == "libMapRoom" && sp->getItemDepenDone() && itemName == "pin") {
                 cout << "There are so many holes already made. Which continent do you put the pin in?\n";
                 vector<string> mapMenuChoices = {"1. Asia", "2. Africa", "3. Europe", "4. Australia", "5. Antarctica", "6. North America", "7. South America"};
                 vector<int> mapMenuNums = {1, 2, 3, 4, 5, 6, 7};
@@ -358,7 +335,6 @@ int main() {
                   backpack.erase(backpack.begin()+item);
                   // set dependency done
                   sp->setItemDepenDone();
-
                 }
                 else {
                   cout << "Hmm. Nothing happened.\n" << endl;
@@ -370,12 +346,10 @@ int main() {
 
                 // if a dependency for other info/actions, mark it done
                 if (sp->hasSpaceDependency()) {
-                  if (sp->getSpaceName() == "libMapRoom" && itemName == "pushPin") {
+                  if (sp->getSpaceName() == "libMapRoom" && itemName == "pin") {
                     // do nothing bc map room is only room with two dependencies; go to "else" if the item is the map
-                    cout << "do nothing here bc map...\n";
                   }
                   else {
-                    cout <<"in setItemDepenDone()\n";
                     sp->setItemDepenDone();
                   }
                 }
@@ -383,15 +357,12 @@ int main() {
                 // print description
                 cout << sp->getSpaceDependency()->getDescriptionAfterDependency() << endl << endl;
 
-                // remove from backpack unless it's the binoculars
-                if (backpack[item] != "binoculars") {
-                  // cout << "before erase\n";
+                // remove from backpack unless it's the binoculars or paper
+                if (backpack[item] != "binoculars" && backpack[item] != "paper") {
                   backpack.erase(backpack.begin()+item);
-                  // cout << "after erase\n";
                 }
               }
               else if (backpack[item] == "flashlight") {
-                // cout <<"here\n";
                 static_cast<ItemToggle*>(flashlightP)->setOn();
                 if (static_cast<ItemToggle*>(flashlightP)->getOn()) {
                   cout << "The flashlight is on.\n" << endl;
@@ -445,12 +416,9 @@ int main() {
               }
             }
             // 2-flip, 3-push, 4-open
-            else if (actionNum >= 2 && actionNum <= 4) {
-
-              // else {
-                sp->setItemTaken(true);
-                static_cast<ItemToggle*>(sp->getItem())->setOn();
-              // }
+            else if (actionNum >= 2 && actionNum <= 4 && itemName != "box") {
+              sp->setItemTaken(true);
+              static_cast<ItemToggle*>(sp->getItem())->setOn();
             }
             // 5-listen, 6-read, 7-look, 8-sit on, 9-unlock
             else if (actionNum >= 5 || actionNum <= 9) {
@@ -472,8 +440,9 @@ int main() {
         }        
       }
     }
-  
-    if (game.getCurrentRoundNum() == game.getTotalRounds()) {
+
+    // if player runs out of moves
+    if (game.getCurrentRoundNum() > game.getTotalRounds()) {
       game.displayRanOutOfTime();
     }
 
@@ -516,15 +485,12 @@ int chooseItemFromBackpack(vector<string> &backpack) {
     backpackMenuNums.push_back(i+1);
     currentMenuNum = i+1;
   }
-  // if (whichAction == "drop") {
 
-  // }
   string choice = toString(currentMenuNum+1) + ": never mind";
   backpackMenuChoices.push_back(choice);
   backpackMenuNums.push_back(currentMenuNum+1);
  
   Menu backpackMenu(backpackMenuChoices, backpackMenuNums);
   int userChoice = backpackMenu.getUserChoice();
-// cout <<"here\n";
   return userChoice-1;
 }

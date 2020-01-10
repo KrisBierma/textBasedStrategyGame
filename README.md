@@ -7,7 +7,7 @@ It's coded in C++ and diplays all lines to the console. A gif is included to sho
 
 ## Build With
 
-* [C++]
+* C++
 
 ## Author
 
